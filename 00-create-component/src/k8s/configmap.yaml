@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  labels:
+    app: backend
+data:
+  PODINFO_UI_MESSAGE: "not configured"
+  PODINFO_UI_COLOR: "#34577c"
