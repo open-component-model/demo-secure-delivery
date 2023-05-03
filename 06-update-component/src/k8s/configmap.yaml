@@ -6,4 +6,4 @@ metadata:
     app: backend
 data:
   PODINFO_UI_MESSAGE: "not configured"
-  PODINFO_UI_COLOR: "#33B6FF"
+  PODINFO_UI_COLOR: "#FF3350"

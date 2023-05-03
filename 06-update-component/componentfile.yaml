@@ -1,0 +1,23 @@
+name: ocm.software/demos/podinfo
+version: v1.1.0
+provider:
+  name: ocm.software
+resources:
+- name: kubernetes-manifests
+  type: Directory
+  input:
+    type: dir
+    path: src/k8s
+    compress: true
+- name: config
+  type: PlainText
+  input:
+    type: file
+    path: src/config.yaml
+    compress: true
+- name: podinfo
+  version: 6.3.5
+  type: ociImage
+  access:
+    type: ociRegistry
+    imageReference: ghcr.io/stefanprodan/podinfo:6.3.5
