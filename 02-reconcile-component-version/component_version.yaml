@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 10m0s
   component: ocm.software/demos/podinfo
-  version:
-    semver: ">=v1.0.0"
   repository:
     url: ghcr.io/phoban01
+  version:
+    semver: ">=v1.0.0"
