@@ -9,4 +9,4 @@ spec:
   repository:
     url: ghcr.io/phoban01
   version:
-    semver: ">=v1.0.0"
+    semver: "v1.1.0"

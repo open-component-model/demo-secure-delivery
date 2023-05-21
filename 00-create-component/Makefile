@@ -2,7 +2,7 @@ VERSION=v1.0.0
 COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=gitopscon
-TARGET_REGISTRY=ghcr.io/phoban01
+TARGET_REGISTRY=gitea.ocm.dev/ocm-admin
 
 .PHONY: clean
 clean:

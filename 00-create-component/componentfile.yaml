@@ -21,3 +21,9 @@ resources:
   access:
     type: ociRegistry
     imageReference: ghcr.io/stefanprodan/podinfo:6.3.0
+- name: podinfo-manifests
+  version: 6.3.0
+  type: Directory
+  access:
+    type: ociRegistry
+    imageReference: ghcr.io/stefanprodan/manifests/podinfo:6.3.0
