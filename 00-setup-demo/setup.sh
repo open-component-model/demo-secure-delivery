@@ -24,7 +24,7 @@ cache-charts
 p "check complete: all charts downloaded"
 
 p "creating kind cluster"
-kind create cluster --name aws-demo --config=./kind/config.yaml
+create-cluster
 
 # p "side-loading images..."
 # preload-images aws-demo
@@ -54,7 +54,7 @@ p "bootstrapping flux"
 bootstrap-flux
 
 p "deploying ocm-controller"
-kubectl apply -f ./manifests/ocm.yaml
+deploy-ocm-controller
 
 echo -e "
 Setup is complete!

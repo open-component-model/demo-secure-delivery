@@ -10,6 +10,11 @@ function p {
     printf "\033[92mDEMO SETUP => \033[96m%s\033[39m\n" "$1"
 }
 
+function create-cluster {
+    kind create cluster --name aws-demo --config=./kind/config.yaml
+    kubectl patch configmap coredns -n kube-system --type merge --patch "$(cat ./kind/coredns.json)"
+}
+
 function add-hosts {
     hosts=(gitea.ocm.dev gitea-ssh.gitea)
     for host in "${hosts[@]}"; do
@@ -37,6 +42,12 @@ function deploy-gitea {
         -n gitea --create-namespace \
         --atomic
     kubectl create secret -n gitea tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
+}
+
+function deploy-ocm-controller {
+    kubectl create namespace ocm-system
+    kubectl create secret -n ocm-system tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
+    kubectl apply -f ./manifests/ocm.yaml
 }
 
 function deploy-ingress {
@@ -74,7 +85,10 @@ function configure-gitea {
 }
 
 function init-repository {
-    git -C ./flux-repo remote remove origin
+    rm -rf ./flux-repo/.git
+    git -C ./flux-repo init
+    git -C ./flux-repo add .
+    git -C ./flux-repo commit -m "initialise repository"
     git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
 }
