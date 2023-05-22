@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ghcr.io/stefanprodan/podinfo:6.2.0
+        image: ghcr.io/phoban01/podinfo:6.3.6-static
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
