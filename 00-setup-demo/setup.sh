@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # demo environment setup
 # Version: v1.0.0
 # Author: Piaras Hoban <piaras@weave.works>
@@ -14,21 +15,22 @@ p "updating /etc/hosts... may prompt for password if host entries do not exist"
 add-hosts
 
 p "running pre-check for tools..."
-. install-tools.sh
+install-tools
 p "check complete: all tools installed"
 
 p "running pre-check for charts..."
-. install-charts.sh
+cache-charts
+
 p "check complete: all charts downloaded"
 
 p "creating kind cluster"
-kind create cluster --name aws-demo -q --config=./kind/config.yaml
+kind create cluster --name aws-demo --config=./kind/config.yaml
 
-p "side-loading images..."
-# . load-images.sh aws-demo
+# p "side-loading images..."
+# preload-images aws-demo
 
 p "caching manifests..."
-. cache-manifests.sh
+cache-manifests
 
 p "creating tls certs"
 mkcerts
@@ -44,6 +46,9 @@ configure-gitea
 
 p "configuring ssh"
 configure-ssh
+
+p "initialise repository"
+init-repository
 
 p "bootstrapping flux"
 bootstrap-flux

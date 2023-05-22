@@ -29,3 +29,8 @@ push:
 .PHONY: verify
 verify:
 	@ocm verify component --signature ${KEYNAME} --public-key ${KEYNAME}.key.pub ${TARGET_REGISTRY}//${COMPONENT_NAME}
+
+.PHONY: run
+run:
+	./script.sh
+

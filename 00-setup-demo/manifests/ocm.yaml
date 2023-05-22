@@ -2371,7 +2371,7 @@ spec:
         - --oci-registry-addr=registry.ocm-system.svc.cluster.local:5000
         command:
         - /manager
-        image: ghcr.io/open-component-model/ocm-controller
+        image: ghcr.io/open-component-model/ocm-controller:v0.8.1
         imagePullPolicy: Always
         livenessProbe:
           httpGet:
