@@ -2403,4 +2403,7 @@ spec:
       volumes:
       - name: certs
         secret:
-          secretName: mkcert-tls
+          secretName: ocm-dev-ca
+          items:
+          - key: ca-certificates.crt
+            path: ca-certificates.crt

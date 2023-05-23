@@ -1,7 +1,7 @@
 VERSION=v1.0.0
 COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
 OUTPUT_DIR=.out
-KEYNAME=gitopscon
+KEYNAME=ocm-signing
 TARGET_REGISTRY=gitea.ocm.dev/ocm-admin
 
 .PHONY: clean
@@ -20,7 +20,7 @@ generate-keys:
 
 .PHONY: sign
 sign:
-	@ocm sign component --signature ${KEYNAME} --private-key ${KEYNAME}.key ${OUTPUT_DIR}
+	@ocm sign component --signature ${KEYNAME} --private-key ../00-setup-demo/pki/${KEYNAME}.rsa.key ${OUTPUT_DIR}
 
 .PHONY: push
 push:
@@ -28,7 +28,7 @@ push:
 
 .PHONY: verify
 verify:
-	@ocm verify component --signature ${KEYNAME} --public-key ${KEYNAME}.key.pub ${TARGET_REGISTRY}//${COMPONENT_NAME}
+	@ocm verify component --signature ${KEYNAME} --public-key ../00-setup-demo/pki/${KEYNAME}.rsa.pub ${TARGET_REGISTRY}//${COMPONENT_NAME}
 
 .PHONY: run
 run:

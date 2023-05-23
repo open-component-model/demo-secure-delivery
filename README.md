@@ -2,7 +2,7 @@
 
 ### Setup
 
-`cd 00-setup-demo && make setup`
+`cd 00-setup-demo && make run`
 
 ## Create Component
 

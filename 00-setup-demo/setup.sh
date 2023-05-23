@@ -33,13 +33,19 @@ p "caching manifests..."
 cache-manifests
 
 p "creating tls certs"
-mkcerts
+configure-tls
+
+p "creating signing keys"
+configure-signing-keys
 
 p "deploying gitea"
 deploy-gitea
 
 p "deploying ingress"
 deploy-ingress
+
+p "deploying ocm-controller"
+deploy-ocm-controller
 
 p "configuring gitea"
 configure-gitea
@@ -52,9 +58,6 @@ init-repository
 
 p "bootstrapping flux"
 bootstrap-flux
-
-p "deploying ocm-controller"
-deploy-ocm-controller
 
 echo -e "
 Setup is complete!

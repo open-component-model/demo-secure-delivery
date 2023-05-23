@@ -1,5 +1,5 @@
 .PHONY: setup teardown
-setup:
+run:
 	./setup.sh
 
 teardown:

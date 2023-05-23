@@ -16,7 +16,7 @@ function create-cluster {
 }
 
 function add-hosts {
-    hosts=(gitea.ocm.dev gitea-ssh.gitea)
+    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev)
     for host in "${hosts[@]}"; do
         if ! grep -qF $host /etc/hosts; then
           echo "127.0.0.1        $host" | sudo tee -a /etc/hosts >/dev/null
@@ -30,10 +30,15 @@ function wait-for-endpoint {
     done
 }
 
-function mkcerts {
+function configure-tls {
     mkdir -p ./certs && rm -f ./certs/*.pem
     mkcert -install 2>/dev/null
-    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev
+    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev podinfo.ocm.dev
+}
+
+function configure-signing-keys {
+    mkdir -p ./pki && rm -f ./pki/*.rsa.*
+    ocm create rsakeypair ./pki/$SIGNING_KEY_NAME.rsa.key ./pki/$SIGNING_KEY_NAME.rsa.pub
 }
 
 function deploy-gitea {
@@ -45,9 +50,17 @@ function deploy-gitea {
 }
 
 function deploy-ocm-controller {
+    MKCERT_CA=$(mkcert -CAROOT)/rootCA.pem
+    TMPFILE=$(mktemp)
+    cat ./ca-certs/alpine-ca.crt $MKCERT_CA > $TMPFILE
     kubectl create namespace ocm-system
-    kubectl create secret -n ocm-system tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
+    kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./pki/$SIGNING_KEY_NAME.rsa.pub
+    kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
+    kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
     kubectl apply -f ./manifests/ocm.yaml
+    kubectl apply -f ./manifests/replication.yaml
+    kubectl apply -f ./manifests/podinfo_ingress.yaml
+    rm $TMPFILE
 }
 
 function deploy-ingress {
@@ -78,10 +91,13 @@ function configure-gitea {
 
     tea org create --login ocm public-org
     tea org create --login ocm private-org
-    tea repo create --login ocm --owner public-org --name podinfo-public
     tea repo create --login ocm --owner private-org --name podinfo-private
 
     echo password | docker login gitea.ocm.dev -u ocm-admin --password-stdin
+    kubectl create secret -n ocm-system generic \
+        gitea-registry-credentials \
+            --from-literal=username=ocm-admin \
+            --from-literal=password=$(echo $TOKEN | jq -r '.sha1')
 }
 
 function init-repository {
@@ -94,8 +110,9 @@ function init-repository {
 }
 
 function configure-ssh {
+    echo "creating private key... $SSH_KEY_PATH"
     if [ ! -f $SSH_KEY_PATH ];then
-        ssh-keygen -q -t ed25519 -C $SSH_KEY_NAME -f $SSH_KEY_PATH -P "" -y
+        ssh-keygen -q -t ed25519 -C $SSH_KEY_NAME -f $SSH_KEY_PATH -P ""
     fi
     SSH_PUBLIC_KEY=$(cat $SSH_KEY_PATH.pub)
     curl https://gitea.ocm.dev/api/v1/user/keys -XPOST --silent \
@@ -107,11 +124,11 @@ function configure-ssh {
 }
 
 function bootstrap-flux {
-    SSH_KEY_PATH=$HOME/.ssh/aws-demo-key
     kubectl apply -f ./manifests/flux.yaml
     flux bootstrap git --silent \
         --url ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git \
         --path=clusters/kind \
+        --interval=10s \
         --private-key-file=$SSH_KEY_PATH
 }
 
