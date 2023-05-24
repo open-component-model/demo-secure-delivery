@@ -59,6 +59,9 @@ init-repository
 p "bootstrapping flux"
 bootstrap-flux
 
+p "create webhook & receiver"
+create-webhook
+
 echo -e "
 Setup is complete!
 

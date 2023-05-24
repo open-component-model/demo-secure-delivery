@@ -2,7 +2,7 @@ VERSION=v1.0.0
 COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing
-TARGET_REGISTRY=gitea.ocm.dev/ocm-admin
+TARGET_REGISTRY=gitea.ocm.dev/public-org
 
 .PHONY: clean
 clean:
@@ -24,7 +24,7 @@ sign:
 
 .PHONY: push
 push:
-	@ocm transfer component -f ${OUTPUT_DIR} ${TARGET_REGISTRY}
+	@ocm transfer component --copy-resources -f ${OUTPUT_DIR} ${TARGET_REGISTRY}
 
 .PHONY: verify
 verify:

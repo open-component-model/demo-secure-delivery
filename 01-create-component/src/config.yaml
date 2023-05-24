@@ -6,15 +6,29 @@ metadata:
     env: test
 configuration:
   defaults:
+    color: "#34577c"
     message: "This is the backend service"
     replicas: 1
+    serviceAccountName: "default"
   rules:
   - value: (( message ))
     file: configmap.yaml
     path: data.PODINFO_UI_MESSAGE
+  - value: (( color ))
+    file: configmap.yaml
+    path: data.PODINFO_UI_COLOR
   - value: (( replicas ))
     file: deployment.yaml
     path: spec.replicas
+  - value: (( serviceAccountName ))
+    file: deployment.yaml
+    path: spec.template.spec.serviceAccountName
+  - value: (( base64(message) ))
+    file: deployment.yaml
+    path: spec.template.metadata.annotations.roll
+  - value: (( base64(join( " ", message,color)) ))
+    file: deployment.yaml
+    path: spec.template.metadata.annotations.roll
   schema:
     type: object
     additionalProperties: false
@@ -22,6 +36,10 @@ configuration:
       replicas:
         type: string
       message:
+        type: string
+      serviceAccountName:
+        type: string
+      color:
         type: string
 localization:
 - resource:

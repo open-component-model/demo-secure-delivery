@@ -59,7 +59,6 @@ function deploy-ocm-controller {
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
     kubectl apply -f ./manifests/ocm.yaml
     kubectl apply -f ./manifests/replication.yaml
-    kubectl apply -f ./manifests/podinfo_ingress.yaml
     rm $TMPFILE
 }
 
@@ -76,17 +75,19 @@ function configure-gitea {
 
     wait-for-endpoint https://gitea.ocm.dev/api/v1/users/ocm-admin
 
-    TOKEN=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
+    TOKEN_REQ=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
         --request POST \
         --header 'Content-Type: application/json' \
         --user "ocm-admin:password" \
         --data '{ "name": "ocm-admin-token", "scopes": [ "all" ] }')
 
+    TOKEN=$(echo $TOKEN_REQ | jq -r '.sha1')
+
     tea login add -i \
         --name ocm \
         --user ocm-admin \
         --password password \
-        --token $(echo $TOKEN | jq -r '.sha1') \
+        --token $TOKEN \
         --url https://gitea.ocm.dev
 
     tea org create --login ocm public-org
@@ -94,10 +95,17 @@ function configure-gitea {
     tea repo create --login ocm --owner private-org --name podinfo-private
 
     echo password | docker login gitea.ocm.dev -u ocm-admin --password-stdin
+
     kubectl create secret -n ocm-system generic \
         gitea-registry-credentials \
             --from-literal=username=ocm-admin \
-            --from-literal=password=$(echo $TOKEN | jq -r '.sha1')
+            --from-literal=password=$TOKEN
+
+    kubectl create secret -n default docker-registry \
+        gitea-registry-credentials \
+            --docker-server=gitea.ocm.dev \
+            --docker-username=ocm-admin \
+            --docker-password=$TOKEN
 }
 
 function init-repository {
@@ -107,6 +115,43 @@ function init-repository {
     git -C ./flux-repo commit -m "initialise repository"
     git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
+}
+
+function create-webhook {
+    TOKEN_REQ=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
+        -s \
+        --request POST \
+        --header 'Content-Type: application/json' \
+        --user "ocm-admin:password" \
+        --data-raw '{ "name": "webhook-token", "scopes": [ "all" ] }')
+    TOKEN=$(echo $TOKEN_REQ | jq -r '.sha1')
+    RECEIVER_TOKEN=$(head -c 12 /dev/urandom | shasum | cut -d ' ' -f1)
+    kubectl -n flux-system create secret generic receiver-token --from-literal=token=$RECEIVER_TOKEN
+    kubectl apply -f ./manifests/webhook_receiver.yaml
+
+    until [ ! -z $(kubectl get receiver gitea-receiver -n flux-system -ojsonpath="{.status.webhookPath}" | xargs) ]; do
+        sleep 0.1
+    done;
+
+    WEB_HOOK_PATH=$(kubectl get receiver gitea-receiver -n flux-system -ojsonpath="{.status.webhookPath}" | xargs)
+
+    curl --location --request POST 'https://gitea.ocm.dev/api/v1/repos/private-org/podinfo-private/hooks' \
+        --header 'Content-Type: application/json' \
+        --header "Authorization: token $TOKEN" \
+        --data-raw '{
+          "active": true,
+          "branch_filter": "main",
+          "config": {
+            "content_type": "json",
+            "url": "http://webhook-receiver.flux-system'$WEB_HOOK_PATH'",
+            "http_method": "post",
+            "secret": "'$RECEIVER_TOKEN'"
+          },
+          "events": [
+            "push"
+          ],
+          "type": "gitea"
+        }'
 }
 
 function configure-ssh {

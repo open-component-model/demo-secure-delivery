@@ -8,6 +8,8 @@ gitea:
       DB_TYPE: sqlite3
     ui:
       DEFAULT_THEME: arc-green
+    webhook:
+      ALLOWED_HOST_LIST: webhook-receiver.flux-system
   admin:
     username: ocm-admin
     password: password

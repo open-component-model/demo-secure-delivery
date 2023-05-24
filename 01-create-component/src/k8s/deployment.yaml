@@ -19,9 +19,11 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9797"
+        roll: empty
       labels:
         app: backend
     spec:
+      serviceAccountName: default
       containers:
       - name: backend
         image: ghcr.io/phoban01/podinfo:6.3.6-static
