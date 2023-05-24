@@ -30,7 +30,7 @@ registry.k8s.io/kube-proxy:v1.27.1
 registry.k8s.io/kube-scheduler:v1.27.1
 docker.io/kindest/local-path-provisioner:v20230511-dc714da8
 ghcr.io/open-component-model/ocm-controller:v0.8.1
-ghcr.io/open-component-model/replication-controller:v0.2.0
+ghcr.io/open-component-model/replication-controller:v0.2.1
 registry:2
 )
 
@@ -50,17 +50,15 @@ ghcr.io/open-component-model/replication-controller:v0.2.0
 registry:2
 )
 
-declare -A install_instructions
-install_instructions["helm_mac"]="brew install helm"
-install_instructions["flux_mac"]="brew install fluxcd/tap/flux"
-install_instructions["kind_mac"]="brew install kind"
-install_instructions["kubectl_mac"]="brew install kubectl"
-install_instructions["jq_mac"]="brew install jq"
-install_instructions["git_mac"]="brew install git"
-install_instructions["curl_mac"]="brew install curl"
-install_instructions["docker_mac"]="brew install docker"
-install_instructions["gzip_mac"]="brew install gzip"
-install_instructions["ocm_mac"]="brew install open-component-model/tap/ocm"
-install_instructions["mkcert"]=" brew install mkcert"
-install_instructions["tea_mac"]="brew tap gitea/tap https://gitea.com/gitea/homebrew-gitea && brew install tea"
-
+helm_mac_instructions="brew install helm"
+flux_mac_instructions="brew install fluxcd/tap/flux"
+kind_mac_instructions="brew install kind"
+kubectl_mac_instructions="brew install kubectl"
+jq_mac_instructions="brew install jq"
+git_mac_instructions="brew install git"
+curl_mac_instructions="brew install curl"
+docker_mac_instructions="brew install docker"
+gzip_mac_instructions="brew install gzip"
+ocm_mac_instructions="brew install open-component-model/tap/ocm"
+mkcert="brew install mkcert"
+tea_mac_instructions="brew tap gitea/tap https://gitea.com/gitea/homebrew-gitea && brew install tea"

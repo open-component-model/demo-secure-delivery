@@ -381,7 +381,7 @@ spec:
         - --zap-log-level=4
         command:
         - /manager
-        image: ghcr.io/open-component-model/replication-controller:v0.2.0
+        image: ghcr.io/open-component-model/replication-controller:v0.2.1
         livenessProbe:
           httpGet:
             path: /healthz

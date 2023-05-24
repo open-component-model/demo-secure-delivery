@@ -259,7 +259,7 @@ function install_tool {
 function install-tools {
     for i in "${tools[@]}"; do
         if ! command -v $i &> /dev/null; then
-            install_tool "$i" "${install_instructions[$i"_mac"]}"
+            install_tool "$i" "$i_mac_instructions"
         fi
     done
 }
