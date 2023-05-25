@@ -205,8 +205,6 @@ spec:
                 type: integer
               replicatedVersion:
                 type: string
-            required:
-            - latestVersion
             type: object
         type: object
     served: true
@@ -381,7 +379,7 @@ spec:
         - --zap-log-level=4
         command:
         - /manager
-        image: ghcr.io/open-component-model/replication-controller:v0.2.1
+        image: ghcr.io/phoban01/replication-controller:v0.2.4
         livenessProbe:
           httpGet:
             path: /healthz

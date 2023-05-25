@@ -12,10 +12,16 @@ configuration:
     serviceAccountName: "default"
   rules:
   - value: (( message ))
-    file: configmap.yaml
+    file: frontend_config.yaml
+    path: data.PODINFO_UI_MESSAGE
+  - value: (( message ))
+    file: backend_config.yaml
     path: data.PODINFO_UI_MESSAGE
   - value: (( color ))
-    file: configmap.yaml
+    file: backend_config.yaml
+    path: data.PODINFO_UI_COLOR
+  - value: (( color ))
+    file: frontend_config.yaml
     path: data.PODINFO_UI_COLOR
   - value: (( replicas ))
     file: backend.yaml
@@ -45,4 +51,8 @@ localization:
 - resource:
     name: podinfo
   file: backend.yaml
+  image: spec.template.spec.containers[0].image
+- resource:
+    name: podinfo
+  file: frontend.yaml
   image: spec.template.spec.containers[0].image
