@@ -238,11 +238,11 @@ function install_tool {
         case $choice in
             [Yy])
                 echo "Installing $tool..."
-                    eval "${install_instructions_mac}"
+                    eval "${!install_instructions_mac}"
                 ;;
             [Nn])
                 echo -e "To install \033[1;36m$tool\033[0m on macOS:"
-                echo -e "  $ ${install_instructions_mac}"
+                echo -e "$ ${install_instructions_mac}"
                 exit 1
                 ;;
             *)
@@ -259,7 +259,7 @@ function install_tool {
 function install-tools {
     for i in "${tools[@]}"; do
         if ! command -v $i &> /dev/null; then
-            install_tool "$i" "$i_mac_instructions"
+            install_tool "$i" "${i}_mac_instructions"
         fi
     done
 }
