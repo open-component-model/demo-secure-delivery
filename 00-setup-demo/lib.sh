@@ -109,7 +109,7 @@ function configure-gitea {
 }
 
 function init-repository {
-    rm -rf ./flux-repo/.git
+    rm -rf ./flux-repo/ ** cp -R ./flux-repo-src ./flux-repo
     git -C ./flux-repo init
     git -C ./flux-repo add .
     git -C ./flux-repo commit -m "initialise repository"
