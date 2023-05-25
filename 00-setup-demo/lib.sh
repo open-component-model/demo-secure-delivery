@@ -109,12 +109,18 @@ function configure-gitea {
 }
 
 function init-repository {
-    rm -rf ./flux-repo/ ** cp -R ./flux-repo-src ./flux-repo
+    rm -rf ./flux-repo/ && mkdir ./flux-repo
+    cp -R ./flux-repo-src/main-branch/. ./flux-repo
     git -C ./flux-repo init
     git -C ./flux-repo add .
     git -C ./flux-repo commit -m "initialise repository"
     git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git
+    git -C ./flux-repo checkout -b ops-install-podinfo
+    cp -R ./flux-repo-src/pr-branch/. ./flux-repo
+    git -C ./flux-repo add .
+    git -C ./flux-repo commit -m "add podinfo component"
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
+    tea pr create --title "Deploy podinfo" --description "Adds ocm-controller manifests for podinfo and values.yaml for application configuration."
 }
 
 function create-webhook {
