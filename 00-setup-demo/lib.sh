@@ -11,8 +11,12 @@ function p {
 }
 
 function create-cluster {
-    kind create cluster --name aws-demo --config=./kind/config.yaml
+    CLUSTER_NAME=aws-demo
+    kind create cluster --name $CLUSTER_NAME --config=./kind/config.yaml
+    IP=$(docker exec -it $CLUSTER_NAME-control-plane cat /etc/hosts | grep 172.20 | cut -f1)
+    docker exec -it $CLUSTER_NAME-control-plane sh -c "echo $IP gitea.ocm.dev >> /etc/hosts"
     kubectl patch configmap coredns -n kube-system --type merge --patch "$(cat ./kind/coredns.json)"
+    kubectl rollout restart -n kube-system deploy coredns
 }
 
 function add-hosts {
@@ -92,7 +96,7 @@ function configure-gitea {
 
     tea org create --login ocm public-org
     tea org create --login ocm private-org
-    tea repo create --login ocm --owner private-org --name podinfo-private
+    tea repo create --login ocm --owner private-org --name $PRIVATE_REPO_NAME
 
     echo password | docker login gitea.ocm.dev -u ocm-admin --password-stdin
 
@@ -114,13 +118,8 @@ function init-repository {
     git -C ./flux-repo init
     git -C ./flux-repo add .
     git -C ./flux-repo commit -m "initialise repository"
-    git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git
-    git -C ./flux-repo checkout -b ops-install-podinfo
-    cp -R ./flux-repo-src/pr-branch/. ./flux-repo
-    git -C ./flux-repo add .
-    git -C ./flux-repo commit -m "add podinfo component"
+    git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/private-org/$PRIVATE_REPO_NAME.git
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
-    tea pr create --title "Deploy podinfo" --description "Adds ocm-controller manifests for podinfo and values.yaml for application configuration."
 }
 
 function create-webhook {
@@ -141,7 +140,7 @@ function create-webhook {
 
     WEB_HOOK_PATH=$(kubectl get receiver gitea-receiver -n flux-system -ojsonpath="{.status.webhookPath}" | xargs)
 
-    curl --location --request POST 'https://gitea.ocm.dev/api/v1/repos/private-org/podinfo-private/hooks' \
+    curl --location --request POST 'https://gitea.ocm.dev/api/v1/repos/private-org/$PRIVATE_REPO_NAME/hooks' \
         --header 'Content-Type: application/json' \
         --header "Authorization: token $TOKEN" \
         --data-raw '{
@@ -160,6 +159,32 @@ function create-webhook {
         }'
 }
 
+function create-pull-request {
+    GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo pull origin main --rebase=true
+    git -C ./flux-repo checkout -b ops-install-podinfo
+    cp -R ./flux-repo-src/pr-branch/. ./flux-repo
+    git -C ./flux-repo add .
+    git -C ./flux-repo commit -m "add podinfo component"
+    GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
+    TOKEN_REQ=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
+        -s \
+        --request POST \
+        --header 'Content-Type: application/json' \
+        --user "ocm-admin:password" \
+        --data-raw '{ "name": "pr-token", "scopes": [ "all" ] }')
+    TOKEN=$(echo $TOKEN_REQ | jq -r '.sha1')
+    curl --location --request POST "https://gitea.ocm.dev/api/v1/repos/private-org/$PRIVATE_REPO_NAME/pulls" \
+        --header 'Content-Type: application/json' \
+        --header "Authorization: token $TOKEN" \
+        --data-raw '{
+          "title": "Deploy podinfo",
+          "body": "Adds ocm-controller manifests for podinfo and values.yaml for application configuration.",
+          "base": "main",
+          "head": "ops-install-podinfo"
+        }'
+}
+
+
 function configure-ssh {
     echo "creating private key... $SSH_KEY_PATH"
     if [ ! -f $SSH_KEY_PATH ];then
@@ -177,7 +202,7 @@ function configure-ssh {
 function bootstrap-flux {
     kubectl apply -f ./manifests/flux.yaml
     flux bootstrap git --silent \
-        --url ssh://git@gitea-ssh.gitea:2222/private-org/podinfo-private.git \
+        --url ssh://git@gitea-ssh.gitea:2222/private-org/$PRIVATE_REPO_NAME.git \
         --path=clusters/kind \
         --interval=10s \
         --private-key-file=$SSH_KEY_PATH

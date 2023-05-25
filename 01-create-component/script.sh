@@ -20,7 +20,7 @@ pe "ocm add componentversions --create --file ${OUTPUT_DIR} --version ${VERSION}
 # SIGN
 pe "ocm sign component --signature ${KEYNAME} --private-key ../00-setup-demo/pki/${KEYNAME}.rsa.key ${OUTPUT_DIR}"
 # TRANSFER
-pe "ocm transfer component --copy-resources -f ${OUTPUT_DIR} ${TARGET_REGISTRY}"
+pe "ocm transfer component -f ${OUTPUT_DIR} ${TARGET_REGISTRY}"
 
 # VERIFY
 pe "ocm verify component --signature ${KEYNAME} --public-key ../00-setup-demo/pki/${KEYNAME}.rsa.pub ${TARGET_REGISTRY}//${COMPONENT_NAME}"

@@ -24,7 +24,7 @@ sign:
 
 .PHONY: push
 push:
-	@ocm transfer component --copy-resources -f ${OUTPUT_DIR} ${TARGET_REGISTRY}
+	@ocm transfer component -f ${OUTPUT_DIR} ${TARGET_REGISTRY}
 
 .PHONY: verify
 verify:

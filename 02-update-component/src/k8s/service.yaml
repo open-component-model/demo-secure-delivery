@@ -7,11 +7,26 @@ spec:
   selector:
     app: backend
   ports:
+  - name: http
+    port: 9898
+    protocol: TCP
+    targetPort: http
+  - port: 9999
+    targetPort: grpc
+    protocol: TCP
+    name: grpc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
     - name: http
-      port: 9898
+      port: 80
       protocol: TCP
       targetPort: http
-    - port: 9999
-      targetPort: grpc
-      protocol: TCP
-      name: grpc
+

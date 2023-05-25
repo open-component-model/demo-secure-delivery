@@ -1,5 +1,4 @@
 name: ocm.software/demos/podinfo
-version: v1.1.0
 provider:
   name: ocm.software
 resources:
@@ -16,8 +15,8 @@ resources:
     path: src/config.yaml
     compress: true
 - name: podinfo
-  version: 6.3.5
+  version: 6.3.6
   type: ociImage
   access:
     type: ociRegistry
-    imageReference: ghcr.io/stefanprodan/podinfo:6.3.5
+    imageReference: ghcr.io/phoban01/podinfo:6.3.6-static

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: frontend
 spec:
   replicas: 1
   minReadySeconds: 3
@@ -13,18 +13,20 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: backend
+      app: frontend
   template:
     metadata:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9797"
+        roll: empty
       labels:
-        app: backend
+        app: frontend
     spec:
+      serviceAccountName: default
       containers:
-      - name: backend
-        image: ghcr.io/stefanprodan/podinfo:6.2.0
+      - name: frontend
+        image: ghcr.io/phoban01/podinfo:6.3.6-static
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
@@ -40,13 +42,10 @@ spec:
         - ./podinfo
         - --port=9898
         - --port-metrics=9797
-        - --grpc-port=9999
-        - --grpc-service-name=backend
-        - --level=info
-        - --cache-server=cache:6379
+        - --backend-url=http://backend:9898/echo
         envFrom:
         - configMapRef:
-            name: backend-config
+            name: frontend-config
         livenessProbe:
           exec:
             command:

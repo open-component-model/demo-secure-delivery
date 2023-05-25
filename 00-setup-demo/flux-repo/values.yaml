@@ -1,0 +1,5 @@
+podinfo:
+  message: "Hello from ocm-controller"
+  replicas: 2
+  serviceAccountName: ocm-dev-ops
+  color: "#33B6FF"

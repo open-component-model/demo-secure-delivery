@@ -1,9 +1,5 @@
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-containerdConfigPatches:
-  - |-
-    [plugins."io.containerd.grpc.v1.cri".registry]
-      config_path = "/etc/containerd/certs.d"
 nodes:
 - role: control-plane
   extraPortMappings:
@@ -16,11 +12,13 @@ nodes:
   extraMounts:
   - containerPath: /etc/containerd/certs.d/gitea.ocm.dev
     hostPath: ./kind/certs.d/gitea.ocm.dev
-  - containerPath: /etc/hosts
-    hostPath: ./kind/hostfile
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
+containerdConfigPatches:
+  - |-
+    [plugins."io.containerd.grpc.v1.cri".registry]
+      config_path = "/etc/containerd/certs.d"

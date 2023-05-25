@@ -4,7 +4,7 @@ metadata:
   name: podinfo-subscription
   namespace: ocm-system
 spec:
-  interval: 10m0s
+  interval: 30s
   component: ocm.software/demos/podinfo
   semver: ">=v1.0.0"
   source:

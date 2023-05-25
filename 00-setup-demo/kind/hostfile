@@ -4,6 +4,6 @@ fe00::0	ip6-localnet
 ff00::0	ip6-mcastprefix
 ff02::1	ip6-allnodes
 ff02::2	ip6-allrouters
-172.20.0.3	aws-demo-control-plane
-fc00:f853:ccd:e793::3	aws-demo-control-plane
+172.20.0.3	demo-control-plane
+fc00:f853:ccd:e793::3	demo-control-plane
 172.20.0.3 gitea.ocm.dev

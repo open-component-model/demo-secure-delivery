@@ -3,6 +3,7 @@
 # Version: v1.0.0
 # Author: Piaras Hoban <piaras@weave.works>
 
+PRIVATE_REPO_NAME=fort-knox
 SIGNING_KEY_NAME=ocm-signing
 
 SSH_KEY_NAME=ocm-private-demo-key

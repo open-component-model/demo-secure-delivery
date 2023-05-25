@@ -62,17 +62,20 @@ bootstrap-flux
 p "create webhook & receiver"
 create-webhook
 
+p "create pull request"
+create-pull-request
+
 echo -e "
 Setup is complete!
 
-You can access gitea at the following URL: https://gitea.ocm.dev/private-org/podinfo-private
+You can access gitea at the following URL: https://gitea.ocm.dev/private-org/$PRIVATE_REPO_NAME
 
 Username: ocm-admin
 Password: password
 "
 
 if [ "$OS" == "Darwin" ];then
-    open https://gitea.ocm.dev/private-org/podinfo-private
+    open https://gitea.ocm.dev/private-org/$PRIVATE_REPO_NAME
 else
-    xdg-open https://gitea.ocm.dev/private-org/podinfo-private
+    xdg-open https://gitea.ocm.dev/private-org/$PRIVATE_REPO_NAME
 fi
