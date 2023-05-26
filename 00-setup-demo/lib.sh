@@ -56,7 +56,7 @@ function deploy-gitea {
 function deploy-ocm-controller {
     MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
     TMPFILE=$(mktemp)
-    cat ./ca-certs/alpine-ca.crt $MKCERT_CA > $TMPFILE
+    cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
     kubectl create namespace ocm-system
     kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./pki/$SIGNING_KEY_NAME.rsa.pub
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
