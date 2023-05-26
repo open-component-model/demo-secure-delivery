@@ -54,7 +54,7 @@ function deploy-gitea {
 }
 
 function deploy-ocm-controller {
-    MKCERT_CA=$(mkcert -CAROOT)/rootCA.pem
+    MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt $MKCERT_CA > $TMPFILE
     kubectl create namespace ocm-system
