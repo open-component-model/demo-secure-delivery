@@ -4,7 +4,7 @@
 
 DEMO_PROMPT="${GREEN}➜ ${CYAN}\W ${COLOR_RESET}"
 
-VERSION=v1.0.0
+VERSION=v1.1.0
 COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing
