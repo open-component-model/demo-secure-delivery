@@ -12,9 +12,6 @@ configuration:
     serviceAccountName: "default"
   rules:
   - value: (( message ))
-    file: frontend_config.yaml
-    path: data.PODINFO_UI_MESSAGE
-  - value: (( message ))
     file: backend_config.yaml
     path: data.PODINFO_UI_MESSAGE
   - value: (( color ))
