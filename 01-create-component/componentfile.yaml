@@ -1,24 +1,24 @@
-name: ocm.software/demos/weave-gitops
+name: ocm.software/demos/podinfo
 provider:
   name: ocm.software
 resources:
 - name: image
   type: ociImage
-  version: v0.24.0
+  version: 6.3.6
   access:
     type: ociRegistry
-    imageReference: ghcr.io/weaveworks/wego-app:v0.24.0
+    imageReference: ghcr.io/phoban01/podinfo:6.3.6-static
 - name: chart
-  version: 4.0.22
+  version: 6.3.6
   type: ociImage
   access:
     type: ociRegistry
-    imageReference: ghcr.io/weaveworks/charts/weave-gitops:4.0.22
+    imageReference: ghcr.io/stefanprodan/charts/podinfo:6.3.6
 - name: manifests
   type: Directory
   input:
     type: dir
-    path: src/k8s
+    path: src/helm
     compress: true
 - name: config
   type: PlainText
@@ -26,3 +26,7 @@ resources:
     type: file
     path: src/config.yaml
     compress: true
+componentReferences:
+- name: prometheus
+  componentName: cncf.io/prometheus
+  version: v1.0.0

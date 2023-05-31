@@ -6,4 +6,4 @@ metadata:
 spec:
   type: "oci"
   interval: 1m0s
-  url: oci://ghcr.io/weaveworks/charts
+  url: oci://ghcr.io/stefanprodan/charts/podinfo
