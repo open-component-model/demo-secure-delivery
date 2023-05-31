@@ -5,7 +5,7 @@
 DEMO_PROMPT="${GREEN}➜ ${CYAN}\W ${COLOR_RESET}"
 
 VERSION=v1.0.0
-COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
+COMPONENT_NAME=ocm.software/demos/weave-gitops:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing
 TARGET_REGISTRY=gitea.ocm.dev/public-org

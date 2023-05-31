@@ -1,11 +1,11 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: ComponentVersion
 metadata:
-  name: podinfo
+  name: weave-gitops
   namespace: ocm-system
 spec:
   interval: 1m0s
-  component: ocm.software/demos/podinfo
+  component: ocm.software/demos/weave-gitops
   repository:
     url: gitea.ocm.dev/private-org
   version:

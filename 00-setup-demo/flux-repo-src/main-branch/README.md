@@ -1,6 +1,6 @@
 # Fort Knox - Private
 
-[https://podinfo.ocm.dev](https://podinfo.ocm.dev)
+[https://weave-gitops.ocm.dev](https://weave-gitops.ocm.dev)
 
 ---
 

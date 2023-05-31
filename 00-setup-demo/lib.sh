@@ -20,7 +20,7 @@ function create-cluster {
 }
 
 function add-hosts {
-    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev)
+    hosts=(gitea.ocm.dev gitea-ssh.gitea weave-gitops.ocm.dev)
     for host in "${hosts[@]}"; do
         if ! grep -qF $host /etc/hosts; then
           echo "127.0.0.1        $host" | sudo tee -a /etc/hosts >/dev/null
@@ -37,7 +37,7 @@ function wait-for-endpoint {
 function configure-tls {
     mkdir -p ./certs && rm -f ./certs/*.pem
     mkcert -install 2>/dev/null
-    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev podinfo.ocm.dev
+    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev weave-gitops.ocm.dev
 }
 
 function configure-signing-keys {
@@ -161,10 +161,10 @@ function create-webhook {
 
 function create-pull-request {
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo pull origin main --rebase=true
-    git -C ./flux-repo checkout -b ops-install-podinfo
+    git -C ./flux-repo checkout -b ops-install-weave-gitops
     cp -R ./flux-repo-src/pr-branch/. ./flux-repo
     git -C ./flux-repo add .
-    git -C ./flux-repo commit -m "add podinfo component"
+    git -C ./flux-repo commit -m "add weave-gitops component"
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
     TOKEN_REQ=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
         -s \
@@ -177,10 +177,10 @@ function create-pull-request {
         --header 'Content-Type: application/json' \
         --header "Authorization: token $TOKEN" \
         --data-raw '{
-          "title": "Deploy podinfo",
-          "body": "Adds ocm-controller manifests for podinfo and values.yaml for application configuration.",
+          "title": "Deploy weave gitops",
+          "body": "Adds ocm-controller manifests for weave-gitops and values.yaml for application configuration.",
           "base": "main",
-          "head": "ops-install-podinfo"
+          "head": "ops-install-weave-gitops"
         }'
 }
 
@@ -200,12 +200,16 @@ function configure-ssh {
 }
 
 function bootstrap-flux {
-    kubectl apply -f ./manifests/flux.yaml
-    flux bootstrap git --silent \
+    MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
+    TMPFILE=$(mktemp)
+    cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
+    kubectl create ns flux-system
+    kubectl create secret -n flux-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
+    flux create secret git -n flux-system flux-system \
         --url ssh://git@gitea-ssh.gitea:2222/private-org/$PRIVATE_REPO_NAME.git \
-        --path=clusters/kind \
-        --interval=10s \
         --private-key-file=$SSH_KEY_PATH
+    kubectl apply -f ./manifests/flux.yaml
+    kubectl apply -f ./flux-repo-src/main-branch/clusters/kind/flux-system/gotk-sync.yaml
 }
 
 function cache-charts {

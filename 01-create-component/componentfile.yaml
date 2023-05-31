@@ -1,14 +1,20 @@
-name: ocm.software/demos/podinfo
+name: ocm.software/demos/weave-gitops
 provider:
   name: ocm.software
 resources:
-- name: podinfo
-  version: 6.3.6
+- name: image
+  type: ociImage
+  version: v0.24.0
+  access:
+    type: ociRegistry
+    imageReference: ghcr.io/weaveworks/wego-app:v0.24.0
+- name: chart
+  version: 4.0.22
   type: ociImage
   access:
     type: ociRegistry
-    imageReference: ghcr.io/phoban01/podinfo:6.3.6-static
-- name: kubernetes-manifests
+    imageReference: ghcr.io/weaveworks/charts/weave-gitops:4.0.22
+- name: manifests
   type: Directory
   input:
     type: dir
