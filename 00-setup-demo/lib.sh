@@ -185,8 +185,8 @@ function create-pull-request {
         --header 'Content-Type: application/json' \
         --header "Authorization: token $TOKEN" \
         --data-raw '{
-          "title": "Deploy weave gitops",
-          "body": "Adds ocm-controller manifests for podinfo and values.yaml for application configuration.",
+          "title": "Deploy podinfo application",
+          "body": "Adds manifests for podinfo and values.yaml for application configuration.",
           "base": "main",
           "head": "ops-install-podinfo"
         }'

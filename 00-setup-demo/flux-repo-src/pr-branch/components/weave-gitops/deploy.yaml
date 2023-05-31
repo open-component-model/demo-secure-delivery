@@ -1,12 +1,12 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: FluxDeployer
 metadata:
-  name: podinfo
+  name: weave-gitops
   namespace: ocm-system
 spec:
   sourceRef:
     kind: Configuration
-    name: podinfo
+    name: weave-gitops
   kustomizationTemplate:
     interval: 1m0s
     path: ./

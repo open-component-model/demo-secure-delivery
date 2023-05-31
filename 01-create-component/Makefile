@@ -1,4 +1,4 @@
-VERSION=v1.0.0
+VERSION=v1.0.4
 COMPONENT_NAME=ocm.software/demos/weave-gitops:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing

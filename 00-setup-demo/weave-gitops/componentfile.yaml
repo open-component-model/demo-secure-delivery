@@ -18,7 +18,7 @@ resources:
   type: Directory
   input:
     type: dir
-    path: src/k8s
+    path: src/helm
     compress: true
 - name: config
   type: PlainText

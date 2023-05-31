@@ -1,11 +1,11 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: ComponentSubscription
 metadata:
-  name: weave-gitops-subscription
+  name: podinfo-subscription
   namespace: ocm-system
 spec:
   interval: 30s
-  component: ocm.software/demos/weave-gitops
+  component: ocm.software/demos/podinfo
   semver: ">=v1.0.0"
   source:
     url: gitea.ocm.dev/public-org

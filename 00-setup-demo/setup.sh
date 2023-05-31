@@ -53,8 +53,8 @@ configure-gitea
 p "configuring ssh"
 configure-ssh
 
-p "create prometheus component"
-create-prometheus-component
+p "create weave gitops component"
+create-weave-gitops-component
 
 p "initialise repository"
 init-repository

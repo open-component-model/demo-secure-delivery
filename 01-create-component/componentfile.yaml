@@ -27,6 +27,6 @@ resources:
     path: src/config.yaml
     compress: true
 componentReferences:
-- name: prometheus
-  componentName: cncf.io/prometheus
+- name: weave-gitops
+  componentName: ocm.software/demos/weave-gitops
   version: v1.0.0

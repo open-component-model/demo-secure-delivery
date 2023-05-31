@@ -25,14 +25,11 @@ localization:
     path: spec.url
     transform: |-
           package main
-
           import (
             "encoding/json"
             "path"
           )
-
           result: string
-
           for x in component.resources {
             if x.name == "chart" {
               result: path.Dir(x.access.imageReference)
@@ -44,14 +41,11 @@ localization:
     path: spec.values.image.repository
     transform: |-
           package main
-
           import (
             "encoding/json"
             "strings"
           )
-
           result: string
-
           for x in component.resources {
             if x.name == "image" {
               result: strings.Split(x.access.imageReference,":")[0]
