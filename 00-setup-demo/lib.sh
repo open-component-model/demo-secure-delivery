@@ -243,19 +243,6 @@ function cache-charts {
     fi
 }
 
-function cache-images {
-    if [ ! -d ./images ]; then
-        mkdir ./images
-    fi
-
-    for image in "${images[@]}"; do
-        name=$(echo $image | rev | cut -d '/' -f1 | rev | cut -d ':' -f1)
-        echo "Caching image... $image"
-        docker pull -q $image
-        docker save $image | gzip > ./images/$name.tar.gz
-    done
-}
-
 function cache-manifests {
     if [ ! -d ./manifests ];then
         mkdir -p ./manifests
@@ -307,12 +294,20 @@ function install-tools {
     done
 }
 
-function preload-images {
-    for image in "${preloadimages[@]}"; do
-        name=$(echo $image | rev | cut -d '/' -f1 | rev | cut -d ':' -f1)
-        echo "Loading image $image"
-        gzip -d -k ./images/$name.tar.gz
-        kind load image-archive --name $1 ./images/$name.tar
-        rm ./images/$name.tar
+function cache-images {
+    if [ ! -d ./images ]; then
+        mkdir ./images
+    fi
+
+    for image in "${images[@]}"; do
+        if ! $(docker image inspect $image > /dev/null 2>&1 ) ; then
+            echo "Caching image... $image"
+            docker pull -q $image
+        fi
     done
+}
+
+
+function preload-images {
+    kind load docker-image --name $1 ${preloadimages[@]}
 }

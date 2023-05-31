@@ -2,36 +2,21 @@ apiVersion: config.ocm.software/v1alpha1
 kind: ConfigData
 metadata:
   name: ocm-config
-  labels:
-    env: test
 configuration:
   defaults:
-    color: "#34577c"
-    message: "This is the backend service"
-    replicas: 1
-    serviceAccountName: "default"
+    replicas: 2
+    message: "podinfo component :: version 6.3.7"
+    serviceAccountName: default
   rules:
-  - value: (( message ))
-    file: backend_config.yaml
-    path: data.PODINFO_UI_MESSAGE
-  - value: (( color ))
-    file: backend_config.yaml
-    path: data.PODINFO_UI_COLOR
-  - value: (( color ))
-    file: frontend_config.yaml
-    path: data.PODINFO_UI_COLOR
   - value: (( replicas ))
-    file: backend.yaml
-    path: spec.replicas
+    file: helm_release.yaml
+    path: spec.values.replicaCount
+  - value: (( message ))
+    file: helm_release.yaml
+    path: spec.values.ui.message
   - value: (( serviceAccountName ))
-    file: backend.yaml
-    path: spec.template.spec.serviceAccountName
-  - value: (( base64(message) ))
-    file: backend.yaml
-    path: spec.template.metadata.annotations.roll
-  - value: (( base64(join( " ", message,color)) ))
-    file: backend.yaml
-    path: spec.template.metadata.annotations.roll
+    file: helm_release.yaml
+    path: spec.values.serviceAccount.name
   schema:
     type: object
     additionalProperties: false
@@ -42,14 +27,52 @@ configuration:
         type: string
       serviceAccountName:
         type: string
-      color:
-        type: string
 localization:
-- resource:
-    name: podinfo
-  file: backend.yaml
-  image: spec.template.spec.containers[0].image
-- resource:
-    name: podinfo
-  file: frontend.yaml
-  image: spec.template.spec.containers[0].image
+- file: helm_release.yaml
+  repository: spec.values.image.repository
+  tag: spec.values.image.tag
+  resource:
+    name: image
+- file: helm_release.yaml
+  tag: spec.chart.spec.version
+  resource:
+    name: chart
+- file: helm_repository.yaml
+  mapping:
+    path: spec.url
+    transform: |-
+          package main
+
+          import (
+            "encoding/json"
+            "path"
+          )
+
+          result: string
+
+          for x in component.resources {
+            if x.name == "chart" {
+              result: path.Dir(x.access.imageReference)
+            }
+          }
+
+          out: json.Marshal("oci://"+result)
+- file: helm_release.yaml
+  mapping:
+    path: spec.values.image.repository
+    transform: |-
+          package main
+
+          import (
+            "encoding/json"
+            "strings"
+          )
+          result: string
+
+          for x in component.resources {
+            if x.name == "image" {
+              result: strings.Split(x.access.imageReference,":")[0]
+            }
+          }
+
+          out: json.Marshal(result)

@@ -9,7 +9,7 @@ spec:
     branch: main
   secretRef:
     name: flux-system
-  url: ssh://git@gitea-ssh.gitea:2222/private-org/fort-knox.git
+  url: ssh://git@gitea-ssh.gitea:2222/private-org/apps.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

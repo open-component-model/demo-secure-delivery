@@ -2361,7 +2361,7 @@ spec:
         command:
         - /manager
         image: ghcr.io/open-component-model/ocm-controller:v0.8.1
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
             path: /healthz
@@ -2391,7 +2391,7 @@ spec:
         - name: certs
           mountPath: /etc/ssl/certs
       initContainers:
-      - image: ghcr.io/open-component-model/ocm-registry
+      - image: ghcr.io/open-component-model/ocm-registry:v0.0.1-dev
         imagePullPolicy: IfNotPresent
         name: init-registry
       securityContext:

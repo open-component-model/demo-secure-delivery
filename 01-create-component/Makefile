@@ -1,5 +1,5 @@
-VERSION=v1.0.4
-COMPONENT_NAME=ocm.software/demos/weave-gitops:${VERSION}
+VERSION=v1.0.0
+COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing
 TARGET_REGISTRY=gitea.ocm.dev/public-org
@@ -8,7 +8,6 @@ TARGET_REGISTRY=gitea.ocm.dev/public-org
 clean:
 	@rm -rf ${OUTPUT_DIR}
 	@rm -rf ${KEYNAME}.key ${KEYNAME}.key.pub
-
 
 .PHONY: build
 build: clean

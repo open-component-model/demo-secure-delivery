@@ -1,6 +1,6 @@
 podinfo:
   replicas: 1
-  message: "podinfo component :: version 6.3.6"
+  message: "Hello from podinfo"
   serviceAccountName: ocm-ops
 weave-gitops:
   serviceAccountName: ocm-ops

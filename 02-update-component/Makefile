@@ -20,7 +20,7 @@ generate-keys:
 
 .PHONY: sign
 sign:
-	@ocm sign component --signature ${KEYNAME} --private-key ../00-setup-demo/signing-keys/${KEYNAME}.rsa.key ${OUTPUT_DIR}
+	@ocm sign component --lookup gitea.ocm.dev/public-org --signature ${KEYNAME} --private-key ../00-setup-demo/signing-keys/${KEYNAME}.rsa.key ${OUTPUT_DIR}
 
 .PHONY: push
 push:

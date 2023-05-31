@@ -3,7 +3,7 @@
 # Version: v1.0.0
 # Author: Piaras Hoban <piaras@weave.works>
 
-PRIVATE_REPO_NAME=fort-knox
+PRIVATE_REPO_NAME=apps
 SIGNING_KEY_NAME=ocm-signing
 
 SSH_KEY_NAME=ocm-private-demo-key
@@ -17,13 +17,15 @@ tools=(helm flux kind jq kubectl ocm mkcert tea git curl docker gzip)
 
 images=(
 ghcr.io/phoban01/podinfo:6.3.6-static
+ghcr.io/phoban01/podinfo:6.3.7-static
+ghcr.io/weaveworks/wego-app:v0.24.0
 ghcr.io/fluxcd/helm-controller:v0.33.0
 ghcr.io/fluxcd/kustomize-controller:v1.0.0-rc.3
 ghcr.io/fluxcd/notification-controller:v1.0.0-rc.3
 ghcr.io/fluxcd/source-controller:v1.0.0-rc.3
 gitea/gitea:1.19.3
-registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230312-helm-chart-4.5.2-28-g66a760794@sha256:01d181618f270f2a96c04006f33b2699ad3ccb02da48d0f89b22abce084b292f
-registry.k8s.io/ingress-nginx/controller:v1.7.1@sha256:7244b95ea47bddcb8267c1e625fb163fc183ef55448855e3ac52a7b260a60407
+registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230312-helm-chart-4.5.2-28-g66a760794
+registry.k8s.io/ingress-nginx/controller:v1.7.1
 registry.k8s.io/coredns/coredns:v1.10.1
 registry.k8s.io/etcd:3.5.7-0
 docker.io/kindest/kindnetd:v20230511-dc714da8
@@ -33,23 +35,27 @@ registry.k8s.io/kube-proxy:v1.27.1
 registry.k8s.io/kube-scheduler:v1.27.1
 docker.io/kindest/local-path-provisioner:v20230511-dc714da8
 ghcr.io/open-component-model/ocm-controller:v0.8.1
-ghcr.io/open-component-model/replication-controller:v0.2.1
+ghcr.io/open-component-model/ocm-registry:v0.0.1-dev
+ghcr.io/phoban01/replication-controller:v0.2.4
 registry:2
 )
 
 preloadimages=(
 ghcr.io/phoban01/podinfo:6.3.6-static
+ghcr.io/phoban01/podinfo:6.3.7-static
+ghcr.io/weaveworks/wego-app:v0.24.0
 ghcr.io/fluxcd/helm-controller:v0.33.0
 ghcr.io/fluxcd/kustomize-controller:v1.0.0-rc.3
 ghcr.io/fluxcd/notification-controller:v1.0.0-rc.3
 ghcr.io/fluxcd/source-controller:v1.0.0-rc.3
 gitea/gitea:1.19.3
-registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230312-helm-chart-4.5.2-28-g66a760794@sha256:01d181618f270f2a96c04006f33b2699ad3ccb02da48d0f89b22abce084b292f
-registry.k8s.io/ingress-nginx/controller:v1.7.1@sha256:7244b95ea47bddcb8267c1e625fb163fc183ef55448855e3ac52a7b260a60407
+registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230312-helm-chart-4.5.2-28-g66a760794
+registry.k8s.io/ingress-nginx/controller:v1.7.1
 registry.k8s.io/coredns/coredns:v1.10.1
 docker.io/kindest/local-path-provisioner:v20230511-dc714da8
+ghcr.io/open-component-model/ocm-registry:v0.0.1-dev
 ghcr.io/open-component-model/ocm-controller:v0.8.1
-ghcr.io/open-component-model/replication-controller:v0.2.0
+ghcr.io/phoban01/replication-controller:v0.2.4
 registry:2
 )
 

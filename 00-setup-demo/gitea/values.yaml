@@ -15,7 +15,7 @@ gitea:
     password: password
     email: ocm@ocm.software
 image:
-  pullPolicy: IfNotPresent
+  pullPolicy: Never
 persistence:
   enabled: false
 memcached:

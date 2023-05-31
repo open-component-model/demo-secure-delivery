@@ -21,13 +21,16 @@ p "check complete: all tools installed"
 p "running pre-check for charts..."
 cache-charts
 
+p "caching images..."
+cache-images
+
 p "check complete: all charts downloaded"
 
 p "creating kind cluster"
 create-cluster
 
-# p "side-loading images..."
-# preload-images aws-demo
+p "side-loading images..."
+preload-images aws-demo
 
 p "caching manifests..."
 cache-manifests
@@ -78,7 +81,7 @@ Password: password
 "
 
 if [ "$OS" == "Darwin" ];then
-    open https://gitea.ocm.dev/private-org/$PRIVATE_REPO_NAME
+    open "https://gitea.ocm.dev/user/login?redirect_to=%2fprivate-org%2fapps"
 else
-    xdg-open https://gitea.ocm.dev/private-org/$PRIVATE_REPO_NAME
+    xdg-open "https://gitea.ocm.dev/user/login?redirect_to=%2fprivate-org%2fapps"
 fi

@@ -4,16 +4,15 @@ provider:
 resources:
 - name: image
   type: ociImage
-  version: 6.3.6
-  access:
-    type: ociRegistry
-    imageReference: ghcr.io/phoban01/podinfo:6.3.6-static
+  input:
+    type: docker
+    path: ghcr.io/phoban01/podinfo:6.3.5-static
 - name: chart
-  version: 6.3.6
   type: ociImage
-  access:
-    type: ociRegistry
-    imageReference: ghcr.io/stefanprodan/charts/podinfo:6.3.6
+  input:
+    type: helm
+    version: 6.3.5
+    path: podinfo-6.3.5.tgz
 - name: manifests
   type: Directory
   input:

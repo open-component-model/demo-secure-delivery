@@ -4,16 +4,15 @@ provider:
 resources:
 - name: image
   type: ociImage
-  version: v0.24.0
-  access:
-    type: ociRegistry
-    imageReference: ghcr.io/weaveworks/wego-app:v0.24.0
+  input:
+    type: docker
+    path: ghcr.io/weaveworks/wego-app:v0.24.0
 - name: chart
-  version: 4.0.22
   type: ociImage
-  access:
-    type: ociRegistry
-    imageReference: ghcr.io/weaveworks/charts/weave-gitops:4.0.22
+  input:
+    type: helm
+    version: 4.0.22
+    path: weave-gitops-4.0.22.tgz
 - name: manifests
   type: Directory
   input:

@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: frontend-config
-  labels:
-    app: frontend
-data:
-  PODINFO_UI_MESSAGE: "Hello from the new frontend service!"
-  PODINFO_UI_COLOR: "#33B6FF"
