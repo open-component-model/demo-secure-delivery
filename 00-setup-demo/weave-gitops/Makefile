@@ -1,5 +1,5 @@
-VERSION=v1.1.0
-COMPONENT_NAME=ocm.software/demos/podinfo:${VERSION}
+VERSION=v1.0.0
+COMPONENT_NAME=ocm.software/demos/weave-gitops:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing
 TARGET_REGISTRY=gitea.ocm.dev/public-org
@@ -20,17 +20,8 @@ generate-keys:
 
 .PHONY: sign
 sign:
-	@ocm sign component --signature ${KEYNAME} --private-key ../00-setup-demo/signing-keys/${KEYNAME}.rsa.key ${OUTPUT_DIR}
+	@ocm sign component --signature ${KEYNAME} --private-key ../signing-keys/${KEYNAME}.rsa.key ${OUTPUT_DIR}
 
 .PHONY: push
 push:
 	@ocm transfer component -f ${OUTPUT_DIR} ${TARGET_REGISTRY}
-
-.PHONY: verify
-verify:
-	@ocm verify component --signature ${KEYNAME} --public-key ../00-setup-demo/signing-keys/${KEYNAME}.rsa.pub ${TARGET_REGISTRY}//${COMPONENT_NAME}
-
-.PHONY: run
-run:
-	./script.sh
-

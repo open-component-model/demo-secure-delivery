@@ -1,2 +1,4 @@
-weave-gitops:
-  serviceAccountName: ocm-dev-ops
+podinfo:
+  replicas: 1
+  message: "podinfo component :: version 6.3.6"
+  serviceAccountName: ocm-ops

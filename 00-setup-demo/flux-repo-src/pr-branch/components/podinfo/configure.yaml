@@ -1,16 +1,16 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: Configuration
 metadata:
-  name: weave-gitops
+  name: podinfo
   namespace: ocm-system
 spec:
   interval: 1m0s
   sourceRef:
     kind: Localization
-    name: weave-gitops
+    name: podinfo
   configRef:
     kind: ComponentVersion
-    name: weave-gitops
+    name: podinfo
     resourceRef:
       name: config
       version: latest
@@ -21,4 +21,4 @@ spec:
         name: flux-system
         namespace: flux-system
       path: ./values.yaml
-      subPath: weave-gitops
+      subPath: podinfo

@@ -1,0 +1,28 @@
+name: ocm.software/demos/weave-gitops
+provider:
+  name: ocm.software
+resources:
+- name: image
+  type: ociImage
+  version: v0.24.0
+  access:
+    type: ociRegistry
+    imageReference: ghcr.io/weaveworks/wego-app:v0.24.0
+- name: chart
+  version: 4.0.22
+  type: ociImage
+  access:
+    type: ociRegistry
+    imageReference: ghcr.io/weaveworks/charts/weave-gitops:4.0.22
+- name: manifests
+  type: Directory
+  input:
+    type: dir
+    path: src/k8s
+    compress: true
+- name: config
+  type: PlainText
+  input:
+    type: file
+    path: src/config.yaml
+    compress: true

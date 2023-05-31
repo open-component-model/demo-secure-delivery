@@ -5,7 +5,7 @@ metadata:
   namespace: ocm-system
 spec:
   interval: 1m0s
-  component: ocm.software/demos/podinfo
+  component: ocm.software/demos/prometheus-stack
   repository:
     url: gitea.ocm.dev/private-org
   version:

@@ -53,6 +53,9 @@ configure-gitea
 p "configuring ssh"
 configure-ssh
 
+p "create prometheus component"
+create-prometheus-component
+
 p "initialise repository"
 init-repository
 

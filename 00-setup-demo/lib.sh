@@ -20,7 +20,7 @@ function create-cluster {
 }
 
 function add-hosts {
-    hosts=(gitea.ocm.dev gitea-ssh.gitea weave-gitops.ocm.dev)
+    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev weave-gitops.ocm.dev)
     for host in "${hosts[@]}"; do
         if ! grep -qF $host /etc/hosts; then
           echo "127.0.0.1        $host" | sudo tee -a /etc/hosts >/dev/null
@@ -37,12 +37,12 @@ function wait-for-endpoint {
 function configure-tls {
     mkdir -p ./certs && rm -f ./certs/*.pem
     mkcert -install 2>/dev/null
-    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev weave-gitops.ocm.dev
+    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev podinfo.ocm.dev
 }
 
 function configure-signing-keys {
-    mkdir -p ./pki && rm -f ./pki/*.rsa.*
-    ocm create rsakeypair ./pki/$SIGNING_KEY_NAME.rsa.key ./pki/$SIGNING_KEY_NAME.rsa.pub
+    mkdir -p ./signing-keys && rm -f ./signing-keys/*.rsa.*
+    ocm create rsakeypair ./signing-keys/$SIGNING_KEY_NAME.rsa.key ./signing-keys/$SIGNING_KEY_NAME.rsa.pub
 }
 
 function deploy-gitea {
@@ -53,12 +53,20 @@ function deploy-gitea {
     kubectl create secret -n gitea tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
 }
 
+function create-weave-gitops-component {
+    cd weave-gitops/
+    make build
+    make sign
+    make push
+    cd ../
+}
+
 function deploy-ocm-controller {
     MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
     kubectl create namespace ocm-system
-    kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./pki/$SIGNING_KEY_NAME.rsa.pub
+    kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./signing-keys/$SIGNING_KEY_NAME.rsa.pub
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
     kubectl apply -f ./manifests/ocm.yaml
@@ -161,10 +169,10 @@ function create-webhook {
 
 function create-pull-request {
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo pull origin main --rebase=true
-    git -C ./flux-repo checkout -b ops-install-weave-gitops
+    git -C ./flux-repo checkout -b ops-install-podinfo
     cp -R ./flux-repo-src/pr-branch/. ./flux-repo
     git -C ./flux-repo add .
-    git -C ./flux-repo commit -m "add weave-gitops component"
+    git -C ./flux-repo commit -m "add podinfo component"
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./flux-repo push origin --all
     TOKEN_REQ=$(curl "https://gitea.ocm.dev/api/v1/users/ocm-admin/tokens" \
         -s \
@@ -178,9 +186,9 @@ function create-pull-request {
         --header "Authorization: token $TOKEN" \
         --data-raw '{
           "title": "Deploy weave gitops",
-          "body": "Adds ocm-controller manifests for weave-gitops and values.yaml for application configuration.",
+          "body": "Adds ocm-controller manifests for podinfo and values.yaml for application configuration.",
           "base": "main",
-          "head": "ops-install-weave-gitops"
+          "head": "ops-install-podinfo"
         }'
 }
 
