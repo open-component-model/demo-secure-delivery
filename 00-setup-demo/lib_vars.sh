@@ -9,6 +9,8 @@ SIGNING_KEY_NAME=ocm-signing
 SSH_KEY_NAME=ocm-private-demo-key
 SSH_KEY_PATH=$HOME/.ssh/$SSH_KEY_NAME
 
+HOSTS=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev weave-gitops.ocm.dev)
+
 os=$(uname -s)
 
 tools=(helm flux kind jq kubectl ocm mkcert tea git curl docker gzip)

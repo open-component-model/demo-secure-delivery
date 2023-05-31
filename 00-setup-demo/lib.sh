@@ -37,7 +37,7 @@ function wait-for-endpoint {
 function configure-tls {
     mkdir -p ./certs && rm -f ./certs/*.pem
     mkcert -install 2>/dev/null
-    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev podinfo.ocm.dev
+    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev weave-gitops.ocm.dev podinfo.ocm.dev
 }
 
 function configure-signing-keys {

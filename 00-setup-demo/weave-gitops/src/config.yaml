@@ -4,7 +4,7 @@ metadata:
   name: ocm-config
 configuration:
   defaults:
-    serviceAccountName: ocm-dev-ops
+    serviceAccountName: ocm-ops
   rules:
   - value: (( serviceAccountName ))
     file: helm_release.yaml
