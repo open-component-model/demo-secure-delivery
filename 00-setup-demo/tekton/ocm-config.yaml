@@ -1,0 +1,13 @@
+type: generic.config.ocm.software/v1
+configurations:
+- type: credentials.config.ocm.software
+  consumers:
+  - identity:
+      type: OCIRegistry
+      hostname: gitea.ocm.dev
+      pathprefix: software-provider
+    credentials:
+      - type: Credentials
+        properties:
+          username: ocm-admin
+          password: password

@@ -1,0 +1,24 @@
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Configuration
+metadata:
+  name: podinfo
+  namespace: ocm-system
+spec:
+  interval: 1m0s
+  sourceRef:
+    kind: Localization
+    name: podinfo
+  configRef:
+    kind: ComponentVersion
+    name: podinfo
+    resourceRef:
+      name: config
+      version: latest
+  valuesFrom:
+    fluxSource:
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      path: ./values.yaml
+      subPath: podinfo

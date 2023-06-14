@@ -1,0 +1,92 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: ocm-build-trigger
+  namespace: tekton-pipelines
+spec:
+  serviceAccountName: tekton-ci-listener
+  triggers:
+  - triggerRef: github-listener
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: Trigger
+metadata:
+  name: github-listener
+  namespace: tekton-pipelines
+spec:
+  interceptors:
+    - ref:
+        name: "github"
+      params:
+        - name: "secretRef"
+          value:
+            secretName: ci-webhook
+            secretKey: secret
+        - name: "eventTypes"
+          value: ["push","release"]
+    - ref:
+        name: "cel"
+      params:
+        - name: "filter"
+          value: body.release.tag_name.matches(r"^v\d+\.\d+\.\d+$")
+  bindings:
+  - ref: github-binding
+  template:
+    ref: publish-component-template
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-binding
+  namespace: tekton-pipelines
+spec:
+  params:
+  - name: gitRepository
+    value: $(body.repository.html_url)
+  - name: tag
+    value: $(body.release.tag_name)
+  - name: repoName
+    value: $(body.repository.full_name)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: publish-component-template
+  namespace: tekton-pipelines
+  annotations:
+    triggers.tekton.dev/old-escape-quotes: "true"
+spec:
+  params:
+    - name: tag
+      description: The tag which got pushed
+    - name: gitRepository
+      description: The git repository that hosts context
+    - name: repoName
+      description: The name of git repository that hosts context
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: publish-
+        annotations:
+          tekton.dev/gitURL: "$(tt.params.gitRepository)"
+      spec:
+        pipelineRef:
+          name: publish
+        params:
+        - name: repo-url
+          value: "http://gitea-http.gitea:3000/$(tt.params.repoName).git"
+        - name: ref
+          value: "$(tt.params.tag)"
+        podTemplate:
+          securityContext:
+            fsGroup: 65532
+        workspaces:
+        - name: shared-data
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
