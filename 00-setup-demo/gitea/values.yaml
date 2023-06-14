@@ -1,0 +1,40 @@
+gitea:
+  config:
+    server:
+      DOMAIN: gitea.ocm.dev
+      ROOT_URL: https://gitea.ocm.dev
+      SSH_DOMAIN: gitea-ssh.gitea
+    database:
+      DB_TYPE: sqlite3
+    ui:
+      DEFAULT_THEME: arc-green
+    webhook:
+      ALLOWED_HOST_LIST: webhook-receiver.flux-system,el-ocm-build-trigger.tekton-pipelines
+    actions:
+      ENABLED: true
+  admin:
+    username: ocm-admin
+    password: password
+    email: ocm@ocm.software
+image:
+  pullPolicy: IfNotPresent
+persistence:
+  enabled: false
+memcached:
+  enabled: false
+postgresql:
+  enabled: false
+service:
+  ssh:
+    port: 2222
+ingress:
+  enabled: true
+  hosts:
+  - host: gitea.ocm.dev
+    paths:
+    - path: "/"
+      pathType: "Prefix"
+  tls:
+  - secretName: mkcert-tls
+    hosts:
+      - gitea.ocm.dev

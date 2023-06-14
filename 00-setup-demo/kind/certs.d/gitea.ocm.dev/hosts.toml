@@ -1,0 +1,5 @@
+server = "https://gitea.ocm.dev"
+
+[host."http://gitea.ocm.dev"]
+  capabilities = ["pull", "resolve"]
+  skip_verify = true

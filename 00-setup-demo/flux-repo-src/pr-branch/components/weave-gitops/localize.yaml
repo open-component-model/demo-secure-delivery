@@ -1,0 +1,19 @@
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Localization
+metadata:
+  name: weave-gitops
+  namespace: ocm-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: ComponentVersion
+    name: weave-gitops
+    resourceRef:
+      name: manifests
+      version: latest
+  configRef:
+    kind: ComponentVersion
+    name: weave-gitops
+    resourceRef:
+      name: config
+      version: latest

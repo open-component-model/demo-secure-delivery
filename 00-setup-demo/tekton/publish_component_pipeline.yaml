@@ -1,0 +1,177 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: publish
+  namespace: tekton-pipelines
+spec:
+  description: |
+    This pipeline clones a git repo, then echoes the README file to the stout.
+  params:
+  - name: repo-url
+    type: string
+    description: The git repo URL to clone from.
+  - name: ref
+    type: string
+    description: The ref repo URL to clone from.
+  workspaces:
+  - name: shared-data
+    description: |
+      This workspace contains the cloned repo files, so they can be read by the
+      next task.
+  tasks:
+  - name: checkout
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: shared-data
+    params:
+    - name: url
+      value: $(params.repo-url)
+    - name: revision
+      value: $(params.ref)
+  - name: publish
+    runAfter:
+    - checkout
+    taskRef:
+      name: publish-component
+    params:
+    - name: registry
+      value: gitea.ocm.dev/software-provider
+    - name: name
+      value: ocm.software/demos/podinfo
+    - name: version
+      value: $(params.ref)
+    workspaces:
+    - name: source
+      workspace: shared-data
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: publish-component
+  namespace: tekton-pipelines
+spec:
+  description: Build, sign and push an OCM component
+  params:
+  - name: registry
+    description: The OCI registry for publishing
+    type: string
+  - name: name
+    description: The component name
+    type: string
+  - name: version
+    description: The component version
+    type: string
+  workspaces:
+  - name: source
+  volumes:
+  - name: signing-keys
+    secret:
+      secretName: signing-keys
+      items:
+      - key: private-key.rsa
+        path: private-key.rsa
+      - key: public-key.rsa
+        path: public-key.rsa
+  - name: certs
+    secret:
+      secretName: ocm-dev-ca
+      items:
+      - key: ca-certificates.crt
+        path: ca-certificates.crt
+  - name: ocm-config
+    secret:
+      secretName: signing-keys
+      items:
+      - key: ocm-config.yaml
+        path: ocm-config.yaml
+  steps:
+  - name: build
+    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    workingDir: "$(workspaces.source.path)"
+    args:
+      - add
+      - componentversion
+      - --create
+      - --version
+      - $(params.version)
+      - --scheme
+      - v3alpha1
+      - componentfile.yaml
+  - name: sign
+    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    workingDir: "$(workspaces.source.path)"
+    args:
+      - sign
+      - component
+      - --lookup
+      - $(params.registry)
+      - --signature
+      - ocm-signing
+      - --private-key
+      - /var/signing/private-key.rsa
+      - ./transport-archive
+    volumeMounts:
+    - name: signing-keys
+      mountPath: /var/signing
+    - name: certs
+      mountPath: /etc/ssl/certs
+  - name: transfer
+    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    workingDir: "$(workspaces.source.path)"
+    args:
+      - --config
+      - /var/ocm/ocm-config.yaml
+      - transfer
+      - component
+      - -f
+      - ./transport-archive
+      - $(params.registry)
+    volumeMounts:
+    - name: certs
+      mountPath: /etc/ssl/certs
+    - name: ocm-config
+      mountPath: /var/ocm
+  - name: verify
+    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    workingDir: "$(workspaces.source.path)"
+    args:
+      - --config
+      - /var/ocm/ocm-config.yaml
+      - verify
+      - component
+      - --lookup
+      - $(params.registry)
+      - --signature
+      - ocm-signing
+      - --public-key
+      - /var/signing/public-key.rsa
+      - $(params.registry)//$(params.name)
+    volumeMounts:
+    - name: signing-keys
+      mountPath: /var/signing
+    - name: certs
+      mountPath: /etc/ssl/certs
+    - name: ocm-config
+      mountPath: /var/ocm
+  - name: view
+    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    workingDir: "$(workspaces.source.path)"
+    args:
+      - --config
+      - /var/ocm/ocm-config.yaml
+      - get
+      - component
+      - $(params.registry)//$(params.name)
+      - --constraints
+      - $(params.version)
+      - --output
+      - yaml
+    volumeMounts:
+    - name: signing-keys
+      mountPath: /var/signing
+    - name: certs
+      mountPath: /etc/ssl/certs
+    - name: ocm-config
+      mountPath: /var/ocm
