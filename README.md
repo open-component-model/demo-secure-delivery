@@ -1,4 +1,4 @@
-# Secure software delivery with Flux and Open Compnent Model
+# Secure software delivery with Flux and Open Component Model
 
 ## Fully guided walkthrough
 
@@ -7,20 +7,17 @@
 This walkthrough deploys a full end-to-end pipeline demonstrating how OCM and Flux can be employed to deploy applications in air-gapped environments.
 
 The demo environment consists of Gitea, Tekton, Flux and the OCM controller.
-
-Two Gitea organisations are created:
+Two Gitea organizations are created:
 - [software-provider](https://gitea.ocm.dev/software-provider)
 - [software-consumer](https://gitea.ocm.dev/software-consumer)
 
-## Softwre Provider
+The provider organization contains a repository which models the `podinfo` application. When a new release is created a Tekton pipeline will be triggered that builds the component and pushes it to the [software provider's OCI registry](https://gitea.ocm.dev/software-provider/-/packages).
 
-The provider organisation contains a repository which models the `podinfo` application. When a new release is created a tekton pipeline will be triggered that builds the component and pushes it to the [software provider's OCI registry](https://gitea.ocm.dev/software-provider/-/packages).
+## Software Consumer
 
-## Softwre Consumer
+The software consumer organization models an air-gapped scenario where applications are deployed from a secure OCI registry rather than directly from an arbitrary upstream source.
 
-The software consumer organisation models an air-gapped scenario where applications are deployed from a secure OCI registry rather than directly from an arbitrary upstream source.
-
-The software consumer organisation contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains the Kubernetes manifests required to deploy the component published by the software provider.
+The software consumer organization contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains the Kubernetes manifests required to deploy the component published by the software provider.
 
 Once this pull request is merged the Flux machinery will deploy the dependency `weave-gitops` and subsequently the `podinfo` component. The [weave-gitops dashboard](https://weave-gitops.ocm.dev) can be used to understand the state of the cluster.
 
@@ -34,7 +31,7 @@ To deploy the demo environment execute the following:
 
 `make run`
 
-Once the environment has been created, login to gitea using the follow credentials:
+Once the environment has been created, login to Gitea using the following credentials:
 
 ```
 username: ocm-admin
@@ -59,7 +56,7 @@ Once the release is published, navigate to https://ci.ocm.dev/#/namespaces/tekto
 
 ![install](./docs/images/install.png)
 
-When the release pipeline has completed we can install the component. Navigate to https://gitea.ocm.dev/software-consumer/ocm-applications/pulls/1 and merge the pull request.
+When the release pipeline has been completed we can install the component. Navigate to https://gitea.ocm.dev/software-consumer/ocm-applications/pulls/1 and merge the pull request.
 
 #### 5. View the Weave GitOps Dashboard
 
@@ -116,10 +113,10 @@ Jump back to https://weave-gitops.ocm.dev to view the rollout of the new release
 
 ![update-ocm](./docs/images/update-ocm.png)
 
-Finally navigate to https://podinfo.ocm.dev which now displays the OCM logo in place of the cuttlefish and the updated application version of 6.3.6
+Finally, navigate to https://podinfo.ocm.dev which now displays the OCM logo in place of the cuttlefish and the updated application version of 6.3.6
 
 ### Conclusion
 
 By leveraging the capabilities of Gitea, Tekton, Flux, and the OCM controller, this demo showcases the seamless deployment of components and dependencies in a secure manner. The use of secure OCI registries and automated release pipelines ensures the integrity and reliability of the deployment process.
 
-Users can easily set up the demo environment, cut releases, monitor release automation, view the Weave GitOps dashboard, and observe the deployment and update of applications. We have presented a practical illustration of how OCM and Flux can be employed to facilitate the deployment and management of applications in air-gapped environments, offering a robust and efficient solution for secure software delivery.
+Users can easily set up the demo environment, cut releases, monitor release automation, view the Weave GitOps dashboard and observe the deployment and update of applications. We have presented a practical illustration of how OCM and Flux can be employed to facilitate the deployment and management of applications in air-gapped environments, offering a robust and efficient solution for secure software delivery.
