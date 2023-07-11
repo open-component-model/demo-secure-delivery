@@ -1,3 +1,5 @@
+[![REUSE status](https://api.reuse.software/badge/github.com/open-component-model/demo-secure-delivery)](https://api.reuse.software/info/github.com/open-component-model/demo-secure-delivery)
+
 # Secure software delivery with Flux and Open Component Model
 
 ## Fully guided walkthrough
@@ -120,3 +122,15 @@ Finally, navigate to https://podinfo.ocm.dev which now displays the OCM logo in 
 By leveraging the capabilities of Gitea, Tekton, Flux, and the OCM controller, this demo showcases the seamless deployment of components and dependencies in a secure manner. The use of secure OCI registries and automated release pipelines ensures the integrity and reliability of the deployment process.
 
 Users can easily set up the demo environment, cut releases, monitor release automation, view the Weave GitOps dashboard and observe the deployment and update of applications. We have presented a practical illustration of how OCM and Flux can be employed to facilitate the deployment and management of applications in air-gapped environments, offering a robust and efficient solution for secure software delivery.
+
+## Contributing
+
+Code contributions, feature requests, bug reports, and help requests are very welcome. Please refer to the [Contributing Guide in the Community repository](https://github.com/open-component-model/community/blob/main/CONTRIBUTING.md) for more information on how to contribute to OCM.
+
+OCM follows the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/main/code-of-conduct.md).
+
+## Licensing
+
+Copyright 2022-2023 SAP SE or an SAP affiliate company and Open Component Model contributors.
+Please see our [LICENSE](LICENSE) for copyright and license information.
+Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/open-component-model/demo-secure-delivery).
