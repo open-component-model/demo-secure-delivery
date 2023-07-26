@@ -4,7 +4,7 @@ metadata:
   name: podinfo
   namespace: ocm-system
 spec:
-  interval: 1m0s
+  interval: 30s
   component: ocm.software/demos/podinfo
   repository:
     url: gitea.ocm.dev/software-consumer

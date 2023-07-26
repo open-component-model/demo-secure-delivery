@@ -5,7 +5,7 @@ metadata:
   name: podinfo-component
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 30s
   path: ./components/podinfo
   prune: true
   dependsOn:
@@ -20,7 +20,7 @@ metadata:
   name: weave-gitops-component
   namespace: flux-system
 spec:
-  interval: 1m0s
+  interval: 30s
   path: ./components/weave-gitops
   prune: true
   sourceRef:

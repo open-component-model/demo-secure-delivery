@@ -4,7 +4,7 @@ metadata:
   name: podinfo
   namespace: ocm-system
 spec:
-  interval: 1m0s
+  interval: 30s
   sourceRef:
     kind: Localization
     name: podinfo

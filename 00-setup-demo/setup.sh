@@ -46,7 +46,7 @@ create-cluster
 
 if [ $MODE -eq 1 ]; then
     p "pre-loading images..."
-    preload-images aws-demo
+    preload-images ocm-demo
 fi
 
 p "caching manifests..."

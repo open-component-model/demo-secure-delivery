@@ -5,5 +5,5 @@ metadata:
   namespace: default
 spec:
   type: "oci"
-  interval: 1m0s
+  interval: 30s
   url: oci://ghcr.io/stefanprodan/charts

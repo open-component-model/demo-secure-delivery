@@ -11,7 +11,7 @@ function p {
 }
 
 function create-cluster {
-    CLUSTER_NAME=aws-demo
+    CLUSTER_NAME=ocm-demo
     kind create cluster --name $CLUSTER_NAME --config=./kind/config.yaml
     IP=$(docker exec -it $CLUSTER_NAME-control-plane cat /etc/hosts | grep 172.20 | cut -f1)
     docker exec -it $CLUSTER_NAME-control-plane sh -c "echo $IP gitea.ocm.dev >> /etc/hosts"
