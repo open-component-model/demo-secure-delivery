@@ -5,3 +5,4 @@ run:
 
 teardown:
 	kind delete cluster --name ocm-demo
+	rm -r 00-setup-demo/charts/telepresence/
