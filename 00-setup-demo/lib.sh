@@ -156,8 +156,8 @@ function configure-gitea {
             --docker-username=ocm-admin \
             --docker-password=$TOKEN
 
-    docker tag ghcr.io/phoban01/podinfo:6.3.5-static gitea.ocm.dev/software-provider/podinfo:6.3.5-static
-    docker tag ghcr.io/phoban01/podinfo:6.3.6-static gitea.ocm.dev/software-provider/podinfo:6.3.6-static
+    docker tag ghcr.io/open-component-model/podinfo:6.3.5-static gitea.ocm.dev/software-provider/podinfo:6.3.5-static
+    docker tag ghcr.io/open-component-model/podinfo:6.3.6-static gitea.ocm.dev/software-provider/podinfo:6.3.6-static
     docker push gitea.ocm.dev/software-provider/podinfo:6.3.5-static
     docker push gitea.ocm.dev/software-provider/podinfo:6.3.6-static
 }
