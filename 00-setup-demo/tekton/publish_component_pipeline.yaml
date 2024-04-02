@@ -88,7 +88,7 @@ spec:
         path: ocm-config.yaml
   steps:
   - name: build
-    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    image: ghcr.io/open-component-model/ocm:latest
     workingDir: "$(workspaces.source.path)"
     args:
       - add
@@ -100,7 +100,7 @@ spec:
       - v3alpha1
       - componentfile.yaml
   - name: sign
-    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    image: ghcr.io/open-component-model/ocm:latest
     workingDir: "$(workspaces.source.path)"
     args:
       - sign
@@ -118,7 +118,7 @@ spec:
     - name: certs
       mountPath: /etc/ssl/certs
   - name: transfer
-    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    image: ghcr.io/open-component-model/ocm:latest
     workingDir: "$(workspaces.source.path)"
     args:
       - --config
@@ -134,7 +134,7 @@ spec:
     - name: ocm-config
       mountPath: /var/ocm
   - name: verify
-    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    image: ghcr.io/open-component-model/ocm:latest
     workingDir: "$(workspaces.source.path)"
     args:
       - --config
@@ -156,7 +156,7 @@ spec:
     - name: ocm-config
       mountPath: /var/ocm
   - name: view
-    image: ghcr.io/phoban01/ocm:0.3.0-rc.2
+    image: ghcr.io/open-component-model/ocm:latest
     workingDir: "$(workspaces.source.path)"
     args:
       - --config

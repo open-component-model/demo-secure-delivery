@@ -6,7 +6,7 @@ icon: https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.1.1/deplo
 keywords:
 - ingress
 - nginx
-kubeVersion: '>= 1.22.0-0'
+kubeVersion: '>= 1.28.0-0'
 maintainers:
 - email: kubernetes@nginx.com
   name: nginxinc
