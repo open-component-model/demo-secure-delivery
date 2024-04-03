@@ -99,6 +99,9 @@ spec:
       - --scheme
       - v3alpha1
       - componentfile.yaml
+    volumeMounts:
+    - name: certs
+      mountPath: /etc/ssl/certs
   - name: sign
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
     workingDir: "$(workspaces.source.path)"
