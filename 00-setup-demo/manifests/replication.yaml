@@ -11,6 +11,8 @@ spec:
     kind: ComponentSubscription
     listKind: ComponentSubscriptionList
     plural: componentsubscriptions
+    shortNames:
+    - coms
     singular: componentsubscription
   scope: Namespaced
   versions:
@@ -18,7 +20,7 @@ spec:
     schema:
       openAPIV3Schema:
         description: ComponentSubscription is the Schema for the componentsubscriptions
-          API
+          API.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -33,25 +35,31 @@ spec:
           metadata:
             type: object
           spec:
-            description: ComponentSubscriptionSpec defines the desired state of ComponentSubscription
+            description: ComponentSubscriptionSpec defines the desired state of ComponentSubscription.
+              It specifies the parameters that the replication controller will use
+              to replicate a desired Component from a source OCM repository to a destination
+              OCM repository.
             properties:
               component:
+                description: Component specifies the name of the Component that should
+                  be replicated.
                 type: string
               destination:
-                description: OCMRepository defines details for a repository, such
-                  as access keys and the url.
+                description: Destination holds the destination or target OCM Repository
+                  details. The ComponentVersion will be transferred into this repository.
                 properties:
                   secretRef:
-                    description: LocalObjectReference contains enough information
-                      to locate the referenced Kubernetes resource object.
+                    description: SecretRef specifies the credentials used to access
+                      the OCI registry.
                     properties:
                       name:
-                        description: Name of the referent.
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?'
                         type: string
-                    required:
-                    - name
                     type: object
+                    x-kubernetes-map-type: atomic
                   url:
+                    description: URL specifies the URL of the OCI registry.
                     type: string
                 required:
                 - url
@@ -63,6 +71,8 @@ spec:
                   reconciling objects.
                 type: string
               semver:
+                description: Semver specifies an optional semver constraint that is
+                  used to evaluate the component versions that should be replicated.
                 type: string
               serviceAccountName:
                 description: ServiceAccountName can be used to configure access to
@@ -71,47 +81,55 @@ spec:
                   or destination, but it is still allowed to do so. https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
                 type: string
               source:
-                description: OCMRepository defines details for a repository, such
-                  as access keys and the url.
+                description: Source holds the OCM Repository details for the replication
+                  source.
                 properties:
                   secretRef:
-                    description: LocalObjectReference contains enough information
-                      to locate the referenced Kubernetes resource object.
+                    description: SecretRef specifies the credentials used to access
+                      the OCI registry.
                     properties:
                       name:
-                        description: Name of the referent.
+                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?'
                         type: string
-                    required:
-                    - name
                     type: object
+                    x-kubernetes-map-type: atomic
                   url:
+                    description: URL specifies the URL of the OCI registry.
                     type: string
                 required:
                 - url
                 type: object
               verify:
+                description: Verify specifies a list signatures that must be verified
+                  before a ComponentVersion is replicated.
                 items:
                   description: Signature defines the details of a signature to use
                     for verification.
                   properties:
                     name:
-                      description: Name of the signature.
+                      description: Name specifies the name of the signature. An OCM
+                        component may have multiple signatures.
                       type: string
                     publicKey:
-                      description: Key which is used for verification.
+                      description: PublicKey provides a reference to a Kubernetes
+                        Secret of contain a blob of a public key that which will be
+                        used to validate the named signature.
                       properties:
                         secretRef:
-                          description: LocalObjectReference contains enough information
-                            to locate the referenced Kubernetes resource object.
+                          description: SecretRef is a reference to a Secret that contains
+                            a public key.
                           properties:
                             name:
-                              description: Name of the referent.
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
                               type: string
-                          required:
-                          - name
                           type: object
-                      required:
-                      - secretRef
+                          x-kubernetes-map-type: atomic
+                        value:
+                          description: Value defines a PEM/base64 encoded public key
+                            value.
+                          type: string
                       type: object
                   required:
                   - name
@@ -125,7 +143,7 @@ spec:
             type: object
           status:
             description: ComponentSubscriptionStatus defines the observed state of
-              ComponentSubscription
+              ComponentSubscription.
             properties:
               conditions:
                 items:
@@ -195,16 +213,61 @@ spec:
                   - type
                   type: object
                 type: array
-              latestVersion:
-                description: LatestVersion defines the version that was last reconciled
-                  successfully.
+              lastAppliedVersion:
+                description: LastAppliedVersion defines the final version that has
+                  been applied to the destination component version.
+                type: string
+              lastAttemptedVersion:
+                description: LastAttemptedVersion defines the latest version encountered
+                  while checking component versions. This might be different from
+                  last applied version which should be the latest applied/replicated
+                  version. The difference might be caused because of semver constraint
+                  or failures during replication.
                 type: string
               observedGeneration:
                 description: ObservedGeneration is the last reconciled generation.
                 format: int64
                 type: integer
-              replicatedVersion:
+              replicatedRepositoryURL:
+                description: ReplicatedRepositoryURL defines the final location of
+                  the reconciled Component.
                 type: string
+              signature:
+                description: Signature defines a set of internal keys that were used
+                  to sign the Component once transferred to the Destination.
+                items:
+                  description: Signature defines the details of a signature to use
+                    for verification.
+                  properties:
+                    name:
+                      description: Name specifies the name of the signature. An OCM
+                        component may have multiple signatures.
+                      type: string
+                    publicKey:
+                      description: PublicKey provides a reference to a Kubernetes
+                        Secret of contain a blob of a public key that which will be
+                        used to validate the named signature.
+                      properties:
+                        secretRef:
+                          description: SecretRef is a reference to a Secret that contains
+                            a public key.
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        value:
+                          description: Value defines a PEM/base64 encoded public key
+                            value.
+                          type: string
+                      type: object
+                  required:
+                  - name
+                  - publicKey
+                  type: object
+                type: array
             type: object
         type: object
     served: true
@@ -228,7 +291,7 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: role
     app.kubernetes.io/part-of: replication-controller
-  name: leader-election-role
+  name: replication-leader-election-role
   namespace: ocm-system
 rules:
 - apiGroups:
@@ -269,6 +332,13 @@ metadata:
   creationTimestamp: null
   name: replication-manager-role
 rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
 - apiGroups:
   - ""
   resources:
@@ -330,12 +400,12 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/name: rolebinding
     app.kubernetes.io/part-of: replication-controller
-  name: leader-election-rolebinding
+  name: replication-leader-election-rolebinding
   namespace: ocm-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: leader-election-role
+  name: replication-leader-election-role
 subjects:
 - kind: ServiceAccount
   name: replication-controller
@@ -379,7 +449,7 @@ spec:
         - --zap-log-level=4
         command:
         - /manager
-        image: ghcr.io/open-component-model/replication-controller:v0.13.0
+        image: ghcr.io/open-component-model/replication-controller:latest
         livenessProbe:
           httpGet:
             path: /healthz
@@ -396,7 +466,7 @@ spec:
         resources:
           limits:
             cpu: 500m
-            memory: 128Mi
+            memory: 256Mi
           requests:
             cpu: 10m
             memory: 64Mi
@@ -406,16 +476,17 @@ spec:
             drop:
             - ALL
         volumeMounts:
-        - name: certs
-          mountPath: /etc/ssl/certs
+        - mountPath: /etc/ssl/certs/registry-root.pem
+          name: certificates
+          subPath: registry-root.pem
       securityContext:
         runAsNonRoot: true
       serviceAccountName: replication-controller
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: certs
+      - name: certificates
         secret:
-          secretName: ocm-dev-ca
           items:
-          - key: ca-certificates.crt
-            path: ca-certificates.crt
+          - key: ca.crt
+            path: registry-root.pem
+          secretName: ocm-registry-tls-certs
