@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -23,17 +22,22 @@ spec:
     schema:
       openAPIV3Schema:
         description: ComponentDescriptor is the Schema for the componentdescriptors
-          API
+          API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -70,15 +74,35 @@ spec:
                     extraIdentity:
                       additionalProperties:
                         type: string
-                      description: ExtraIdentity is the identity of an object. An
-                        additional label with key "name" ist not allowed
+                      description: |-
+                        ExtraIdentity is the identity of an object.
+                        An additional label with key "name" ist not allowed
                       type: object
                     labels:
-                      description: Labels defines an optional set of additional labels
+                      description: |-
+                        Labels defines an optional set of additional labels
                         describing the object.
                       items:
                         description: Label is a label that can be set on objects.
                         properties:
+                          merge:
+                            description: |-
+                              MergeAlgorithm optionally describes the desired merge handling used to
+                              merge the label value during a transfer.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  Algorithm optionally described the Merge algorithm used to
+                                  merge the label value during a transfer.
+                                type: string
+                              config:
+                                description: eConfig contains optional config for
+                                  the merge algorithm.
+                                format: byte
+                                type: string
+                            required:
+                            - algorithm
+                            type: object
                           name:
                             description: Name is the unique name of the label.
                             type: string
@@ -117,8 +141,9 @@ spec:
                   description: Resource describes a resource dependency of a component.
                   properties:
                     access:
-                      description: Access describes the type specific method to access
-                        the defined resource.
+                      description: |-
+                        Access describes the type specific method to
+                        access the defined resource.
                       properties:
                         type:
                           description: Type describes the type of the object.
@@ -145,15 +170,35 @@ spec:
                     extraIdentity:
                       additionalProperties:
                         type: string
-                      description: ExtraIdentity is the identity of an object. An
-                        additional label with key "name" ist not allowed
+                      description: |-
+                        ExtraIdentity is the identity of an object.
+                        An additional label with key "name" ist not allowed
                       type: object
                     labels:
-                      description: Labels defines an optional set of additional labels
+                      description: |-
+                        Labels defines an optional set of additional labels
                         describing the object.
                       items:
                         description: Label is a label that can be set on objects.
                         properties:
+                          merge:
+                            description: |-
+                              MergeAlgorithm optionally describes the desired merge handling used to
+                              merge the label value during a transfer.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  Algorithm optionally described the Merge algorithm used to
+                                  merge the label value during a transfer.
+                                type: string
+                              config:
+                                description: eConfig contains optional config for
+                                  the merge algorithm.
+                                format: byte
+                                type: string
+                            required:
+                            - algorithm
+                            type: object
                           name:
                             description: Name is the unique name of the label.
                             type: string
@@ -177,12 +222,14 @@ spec:
                       description: Name is the context unique name of the object.
                       type: string
                     relation:
-                      description: Relation describes the relation of the resource
-                        to the component. Can be a local or external resource
+                      description: |-
+                        Relation describes the relation of the resource to the component.
+                        Can be a local or external resource
                       type: string
                     srcRef:
-                      description: SourceRef defines a list of source names. These
-                        names reference the sources defines in `component.sources`.
+                      description: |-
+                        SourceRef is for deserialization compatibility, only.
+                        The usage of this field in external formats is deprecated.
                       items:
                         description: SourceRef defines a reference to a source
                         properties:
@@ -193,11 +240,91 @@ spec:
                               is used to match a source.
                             type: object
                           labels:
-                            description: Labels defines an optional set of additional
-                              labels describing the object.
+                            description: |-
+                              Labels defines an optional set of additional labels
+                              describing the object.
                             items:
                               description: Label is a label that can be set on objects.
                               properties:
+                                merge:
+                                  description: |-
+                                    MergeAlgorithm optionally describes the desired merge handling used to
+                                    merge the label value during a transfer.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        Algorithm optionally described the Merge algorithm used to
+                                        merge the label value during a transfer.
+                                      type: string
+                                    config:
+                                      description: eConfig contains optional config
+                                        for the merge algorithm.
+                                      format: byte
+                                      type: string
+                                  required:
+                                  - algorithm
+                                  type: object
+                                name:
+                                  description: Name is the unique name of the label.
+                                  type: string
+                                signing:
+                                  description: Signing describes whether the label
+                                    should be included into the signature
+                                  type: boolean
+                                value:
+                                  description: Value is the json/yaml data of the
+                                    label
+                                  x-kubernetes-preserve-unknown-fields: true
+                                version:
+                                  description: Version is the optional specification
+                                    version of the attribute value
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            type: array
+                        type: object
+                      type: array
+                    srcRefs:
+                      description: |-
+                        SourceRefs defines a list of source names.
+                        These entries reference the sources defined in the
+                        component.sources.
+                      items:
+                        description: SourceRef defines a reference to a source
+                        properties:
+                          identitySelector:
+                            additionalProperties:
+                              type: string
+                            description: IdentitySelector defines the identity that
+                              is used to match a source.
+                            type: object
+                          labels:
+                            description: |-
+                              Labels defines an optional set of additional labels
+                              describing the object.
+                            items:
+                              description: Label is a label that can be set on objects.
+                              properties:
+                                merge:
+                                  description: |-
+                                    MergeAlgorithm optionally describes the desired merge handling used to
+                                    merge the label value during a transfer.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        Algorithm optionally described the Merge algorithm used to
+                                        merge the label value during a transfer.
+                                      type: string
+                                    config:
+                                      description: eConfig contains optional config
+                                        for the merge algorithm.
+                                      format: byte
+                                      type: string
+                                  required:
+                                  - algorithm
+                                  type: object
                                 name:
                                   description: Name is the unique name of the label.
                                   type: string
@@ -252,15 +379,35 @@ spec:
                     extraIdentity:
                       additionalProperties:
                         type: string
-                      description: ExtraIdentity is the identity of an object. An
-                        additional label with key "name" ist not allowed
+                      description: |-
+                        ExtraIdentity is the identity of an object.
+                        An additional label with key "name" ist not allowed
                       type: object
                     labels:
-                      description: Labels defines an optional set of additional labels
+                      description: |-
+                        Labels defines an optional set of additional labels
                         describing the object.
                       items:
                         description: Label is a label that can be set on objects.
                         properties:
+                          merge:
+                            description: |-
+                              MergeAlgorithm optionally describes the desired merge handling used to
+                              merge the label value during a transfer.
+                            properties:
+                              algorithm:
+                                description: |-
+                                  Algorithm optionally described the Merge algorithm used to
+                                  merge the label value during a transfer.
+                                type: string
+                              config:
+                                description: eConfig contains optional config for
+                                  the merge algorithm.
+                                format: byte
+                                type: string
+                            required:
+                            - algorithm
+                            type: object
                           name:
                             description: Name is the unique name of the label.
                             type: string
@@ -302,7 +449,7 @@ spec:
             - version
             type: object
           status:
-            description: ComponentDescriptorStatus defines the observed state of ComponentDescriptor
+            description: ComponentDescriptorStatus defines the observed state of ComponentDescriptor.
             type: object
         type: object
     served: true
@@ -314,8 +461,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -347,92 +493,117 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ComponentVersion is the Schema for the ComponentVersions API
+        description: ComponentVersion is the Schema for the ComponentVersions API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: ComponentVersionSpec defines the desired state of ComponentVersion
+            description: |-
+              ComponentVersionSpec specifies the configuration required to retrieve a
+              component descriptor for a component version.
             properties:
               component:
-                description: 'Every Component Version has a name. Name and version
-                  are the identifier for a Component Version and therefor for the
-                  artifact set described by it. A component name SHOULD reference
-                  a location where the component’s resources (typically source code,
-                  and/or documentation) are hosted. It MUST be a DNS compliant name
-                  with lowercase characters and MUST contain a name after the domain.
-                  Examples: - github.com/pathToYourRepo'
+                description: Component specifies the name of the ComponentVersion.
                 type: string
               interval:
+                description: Interval specifies the interval at which the Repository
+                  will be checked for updates.
                 type: string
               references:
+                description: References specifies configuration for the handling of
+                  nested component references.
                 properties:
                   expand:
+                    description: |-
+                      Expand specifies if a Kubernetes API resource of kind ComponentDescriptor should
+                      be generated for each component reference that is present in the root ComponentVersion.
                     type: boolean
                 type: object
               repository:
-                description: Repository defines the OCM Repository.
+                description: |-
+                  Repository provides details about the OCI repository from which the component
+                  descriptor can be retrieved.
                 properties:
                   secretRef:
-                    description: LocalObjectReference contains enough information
-                      to let you locate the referenced object inside the same namespace.
+                    description: SecretRef specifies the credentials used to access
+                      the OCI registry.
                     properties:
                       name:
-                        description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                          TODO: Add other useful fields. apiVersion, kind, uid?'
+                        description: |-
+                          Name of the referent.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?
                         type: string
                     type: object
+                    x-kubernetes-map-type: atomic
                   url:
-                    description: 'TODO@souleb: do we need a scheme for the url? add
-                      description for each field Do we need a type field? (e.g. oci,
-                      git, s3, etc.)'
+                    description: |-
+                      URL specifies the URL of the OCI registry in which the ComponentVersion is stored.
+                      MUST NOT CONTAIN THE SCHEME.
                     type: string
                 required:
                 - url
                 type: object
               serviceAccountName:
-                description: ServiceAccountName can be used to configure access to
-                  both destination and source repositories. If service account is
-                  defined, it's usually redundant to define access to either source
-                  or destination, but it is still allowed to do so. https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
+                description: |-
+                  ServiceAccountName can be used to configure access to both destination and source repositories.
+                  If service account is defined, it's usually redundant to define access to either source or destination, but
+                  it is still allowed to do so.
+                  https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#add-imagepullsecrets-to-a-service-account
                 type: string
               suspend:
-                description: Suspend stops all operations on this component version
-                  object.
+                description: Suspend can be used to temporarily pause the reconciliation
+                  of the ComponentVersion resource.
                 type: boolean
               verify:
+                description: |-
+                  Verify specifies a list signatures that should be validated before the ComponentVersion
+                  is marked Verified.
                 items:
                   description: Signature defines the details of a signature to use
                     for verification.
                   properties:
                     name:
-                      description: Name of the signature.
+                      description: |-
+                        Name specifies the name of the signature. An OCM component may have multiple
+                        signatures.
                       type: string
                     publicKey:
-                      description: Key which is used for verification.
+                      description: |-
+                        PublicKey provides a reference to a Kubernetes Secret of contain a blob of a public key that
+                        which will be used to validate the named signature.
                       properties:
                         secretRef:
-                          description: LocalObjectReference contains enough information
-                            to let you locate the referenced object inside the same
-                            namespace.
+                          description: SecretRef is a reference to a Secret that contains
+                            a public key.
                           properties:
                             name:
-                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              description: |-
+                                Name of the referent.
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?
                               type: string
                           type: object
-                      required:
-                      - secretRef
+                          x-kubernetes-map-type: atomic
+                        value:
+                          description: Value defines a PEM/base64 encoded public key
+                            value.
+                          type: string
                       type: object
                   required:
                   - name
@@ -440,12 +611,11 @@ spec:
                   type: object
                 type: array
               version:
-                description: Component versions refer to specific snapshots of a component.
-                  A common scenario being the release of a component.
+                description: Version specifies the version information for the ComponentVersion.
                 properties:
-                  allowRollback:
-                    type: boolean
                   semver:
+                    description: Semver specifies a semantic version constraint for
+                      the Component Version.
                     type: string
                 type: object
             required:
@@ -455,15 +625,16 @@ spec:
             - version
             type: object
           status:
-            description: ComponentVersionStatus defines the observed state of ComponentVersion
+            description: ComponentVersionStatus defines the observed state of ComponentVersion.
             properties:
               componentDescriptor:
-                description: Reference contains all referred components and their
-                  versions.
+                description: ComponentDescriptor holds the ComponentDescriptor information
+                  for the ComponentVersion.
                 properties:
                   componentDescriptorRef:
-                    description: NamespacedObjectReference contains enough information
-                      to locate the referenced Kubernetes resource object in any namespace.
+                    description: |-
+                      ComponentDescriptorRef specifies the reference for the Kubernetes object representing
+                      the ComponentDescriptor.
                     properties:
                       name:
                         description: Name of the referent.
@@ -478,56 +649,62 @@ spec:
                   extraIdentity:
                     additionalProperties:
                       type: string
+                    description: ExtraIdentity specifies additional identity attributes
+                      of the referenced component.
                     type: object
                   name:
+                    description: Name specifies the name of the referenced component.
                     type: string
                   references:
+                    description: References is a list of component references.
                     x-kubernetes-preserve-unknown-fields: true
                   version:
+                    description: Version specifies the version of the referenced component.
                     type: string
                 required:
                 - name
                 - version
                 type: object
               conditions:
+                description: Conditions holds the conditions for the ComponentVersion.
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -541,11 +718,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -562,8 +740,12 @@ spec:
                 format: int64
                 type: integer
               reconciledVersion:
+                description: ReconciledVersion is a string containing the version
+                  of the latest reconciled ComponentVersion.
                 type: string
               verified:
+                description: Verified is a boolean indicating whether all the specified
+                  signatures have been verified and are valid.
                 type: boolean
             type: object
         type: object
@@ -576,8 +758,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -609,23 +790,28 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Configuration is the Schema for the configurations API
+        description: Configuration is the Schema for the configurations API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: MutationSpec defines a common spec between Localization and
-              Configuration.
+            description: MutationSpec defines a common spec for Localization and Configuration
+              of OCM resources.
             properties:
               configRef:
                 description: ObjectReference defines a resource which may be accessed
@@ -651,15 +837,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -680,22 +884,20 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
@@ -703,37 +905,20 @@ spec:
                 type: object
               interval:
                 type: string
-              outputTemplate:
-                description: SnapshotTemplateSpec defines the template used to create
-                  snapshots
-                properties:
-                  annotations:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  labels:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
               patchStrategicMerge:
                 description: PatchStrategicMerge contains the source and target details
-                  required to perform a strategic merge
+                  required to perform a strategic merge.
                 properties:
                   source:
                     description: PatchStrategicMergeSource contains the details required
-                      to retrieve the source from a Flux source
+                      to retrieve the source from a Flux source.
                     properties:
                       path:
                         type: string
                       sourceRef:
-                        description: NamespacedObjectKindReference contains enough
-                          information to locate the typed referenced Kubernetes resource
-                          object in any namespace.
+                        description: |-
+                          NamespacedObjectKindReference contains enough information to locate the typed referenced Kubernetes resource object
+                          in any namespace.
                         properties:
                           apiVersion:
                             description: API version of the referent, if not specified
@@ -759,7 +944,7 @@ spec:
                     type: object
                   target:
                     description: PatchStrategicMergeTarget provides details about
-                      the merge target
+                      the merge target.
                     properties:
                       path:
                         type: string
@@ -794,15 +979,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -823,22 +1026,20 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
@@ -850,19 +1051,38 @@ spec:
               values:
                 x-kubernetes-preserve-unknown-fields: true
               valuesFrom:
-                description: ValuesSource provides access to values from an external
-                  Source such as a ConfigMap or GitRepository. An optional subpath
-                  defines the path within the source from which the values should
-                  be resolved.
+                description: |-
+                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository.
+                  An optional subpath defines the path within the source from which the values should be resolved.
                 properties:
+                  configMapSource:
+                    properties:
+                      key:
+                        type: string
+                      sourceRef:
+                        description: LocalObjectReference contains enough information
+                          to locate the referenced Kubernetes resource object.
+                        properties:
+                          name:
+                            description: Name of the referent.
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      subPath:
+                        type: string
+                    required:
+                    - key
+                    - sourceRef
+                    type: object
                   fluxSource:
                     properties:
                       path:
                         type: string
                       sourceRef:
-                        description: NamespacedObjectKindReference contains enough
-                          information to locate the typed referenced Kubernetes resource
-                          object in any namespace.
+                        description: |-
+                          NamespacedObjectKindReference contains enough information to locate the typed referenced Kubernetes resource object
+                          in any namespace.
                         properties:
                           apiVersion:
                             description: API version of the referent, if not specified
@@ -884,6 +1104,9 @@ spec:
                         type: object
                       subPath:
                         type: string
+                    required:
+                    - path
+                    - sourceRef
                     type: object
                 type: object
             type: object
@@ -896,42 +1119,42 @@ spec:
               conditions:
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -945,11 +1168,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -986,8 +1210,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -1013,23 +1236,35 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: FluxDeployer is the Schema for the fluxdeployers API
+        description: FluxDeployer is the Schema for the FluxDeployers API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: FluxDeployerSpec defines the desired state of FluxDeployer
+            description: FluxDeployerSpec defines the desired state of FluxDeployer.
             properties:
+              helmReleaseTemplate:
+                x-kubernetes-preserve-unknown-fields: true
+              interval:
+                description: The interval at which to reconcile the Kustomization
+                  and Helm Releases.
+                pattern: ^([0-9]+(\.[0-9]+)?(ms|s|m|h))+$
+                type: string
               kustomizationTemplate:
                 x-kubernetes-preserve-unknown-fields: true
               sourceRef:
@@ -1056,15 +1291,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -1085,73 +1338,71 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
                 - name
                 type: object
             required:
-            - kustomizationTemplate
+            - interval
             - sourceRef
             type: object
           status:
-            description: FluxDeployerStatus defines the observed state of FluxDeployer
+            description: FluxDeployerStatus defines the observed state of FluxDeployer.
             properties:
               conditions:
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -1165,11 +1416,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -1200,8 +1452,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -1233,23 +1484,28 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Localization is the Schema for the localizations API
+        description: Localization is the Schema for the localizations API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: MutationSpec defines a common spec between Localization and
-              Configuration.
+            description: MutationSpec defines a common spec for Localization and Configuration
+              of OCM resources.
             properties:
               configRef:
                 description: ObjectReference defines a resource which may be accessed
@@ -1275,15 +1531,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -1304,22 +1578,20 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
@@ -1327,37 +1599,20 @@ spec:
                 type: object
               interval:
                 type: string
-              outputTemplate:
-                description: SnapshotTemplateSpec defines the template used to create
-                  snapshots
-                properties:
-                  annotations:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  labels:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
               patchStrategicMerge:
                 description: PatchStrategicMerge contains the source and target details
-                  required to perform a strategic merge
+                  required to perform a strategic merge.
                 properties:
                   source:
                     description: PatchStrategicMergeSource contains the details required
-                      to retrieve the source from a Flux source
+                      to retrieve the source from a Flux source.
                     properties:
                       path:
                         type: string
                       sourceRef:
-                        description: NamespacedObjectKindReference contains enough
-                          information to locate the typed referenced Kubernetes resource
-                          object in any namespace.
+                        description: |-
+                          NamespacedObjectKindReference contains enough information to locate the typed referenced Kubernetes resource object
+                          in any namespace.
                         properties:
                           apiVersion:
                             description: API version of the referent, if not specified
@@ -1383,7 +1638,7 @@ spec:
                     type: object
                   target:
                     description: PatchStrategicMergeTarget provides details about
-                      the merge target
+                      the merge target.
                     properties:
                       path:
                         type: string
@@ -1418,15 +1673,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -1447,22 +1720,20 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
@@ -1474,19 +1745,38 @@ spec:
               values:
                 x-kubernetes-preserve-unknown-fields: true
               valuesFrom:
-                description: ValuesSource provides access to values from an external
-                  Source such as a ConfigMap or GitRepository. An optional subpath
-                  defines the path within the source from which the values should
-                  be resolved.
+                description: |-
+                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository.
+                  An optional subpath defines the path within the source from which the values should be resolved.
                 properties:
+                  configMapSource:
+                    properties:
+                      key:
+                        type: string
+                      sourceRef:
+                        description: LocalObjectReference contains enough information
+                          to locate the referenced Kubernetes resource object.
+                        properties:
+                          name:
+                            description: Name of the referent.
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      subPath:
+                        type: string
+                    required:
+                    - key
+                    - sourceRef
+                    type: object
                   fluxSource:
                     properties:
                       path:
                         type: string
                       sourceRef:
-                        description: NamespacedObjectKindReference contains enough
-                          information to locate the typed referenced Kubernetes resource
-                          object in any namespace.
+                        description: |-
+                          NamespacedObjectKindReference contains enough information to locate the typed referenced Kubernetes resource object
+                          in any namespace.
                         properties:
                           apiVersion:
                             description: API version of the referent, if not specified
@@ -1508,6 +1798,9 @@ spec:
                         type: object
                       subPath:
                         type: string
+                    required:
+                    - path
+                    - sourceRef
                     type: object
                 type: object
             type: object
@@ -1520,42 +1813,42 @@ spec:
               conditions:
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -1569,11 +1862,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -1610,8 +1904,283 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
+  labels:
+    app.kubernetes.io/instance: ocm-system
+    app.kubernetes.io/part-of: ocm
+  name: resourcepipelines.delivery.ocm.software
+spec:
+  group: delivery.ocm.software
+  names:
+    kind: ResourcePipeline
+    listKind: ResourcePipelineList
+    plural: resourcepipelines
+    shortNames:
+    - rp
+    singular: resourcepipeline
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=="Ready")].status
+      name: Ready
+      type: string
+    - jsonPath: .status.latestSnapshotDigest
+      name: Digest
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ResourcePipeline is the Schema for the resourcepipelines API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ResourcePipelineSpec defines the desired state of ResourcePipeline.
+            properties:
+              interval:
+                type: string
+              parameters:
+                x-kubernetes-preserve-unknown-fields: true
+              pipelineSpec:
+                description: PipelineSpec holds the steps that constitute the pipeline.
+                properties:
+                  steps:
+                    items:
+                      description: |-
+                        WasmStep defines the name version and location of a wasm module that is stored// in an ocm component.
+                        The format of the module name must be <component-name>:<component-version>@<resource-name>. Optionally a registry address can be specified.
+                      properties:
+                        module:
+                          example: ocm.software/modules:v1.0.0@kustomizer
+                          pattern: ^([A-Za-z0-9\.\/]+):(v[0-9\.\-a-z]+)@([a-z]+)$
+                          type: string
+                        name:
+                          type: string
+                        registry:
+                          default: ghcr.io/open-component-model
+                          type: string
+                        timeout:
+                          default: 30s
+                          pattern: ^([0-9]+(\.[0-9]+)?(ms|s|m))+$
+                          type: string
+                        values:
+                          x-kubernetes-preserve-unknown-fields: true
+                      required:
+                      - module
+                      - name
+                      type: object
+                    type: array
+                required:
+                - steps
+                type: object
+              serviceAccountName:
+                type: string
+              sourceRef:
+                description: ObjectReference defines a resource which may be accessed
+                  via a snapshot or component version
+                minProperties: 1
+                properties:
+                  apiVersion:
+                    description: API version of the referent, if not specified the
+                      Kubernetes preferred version will be used.
+                    type: string
+                  kind:
+                    description: Kind of the referent.
+                    type: string
+                  name:
+                    description: Name of the referent.
+                    type: string
+                  namespace:
+                    description: Namespace of the referent, when not specified it
+                      acts as LocalObjectReference.
+                    type: string
+                  resourceRef:
+                    properties:
+                      extraIdentity:
+                        additionalProperties:
+                          type: string
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
+                        type: object
+                      labels:
+                        description: Labels describe a list of labels
+                        items:
+                          description: Label is a label that can be set on objects.
+                          properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
+                            name:
+                              description: Name is the unique name of the label.
+                              type: string
+                            signing:
+                              description: Signing describes whether the label should
+                                be included into the signature
+                              type: boolean
+                            value:
+                              description: Value is the json/yaml data of the label
+                              x-kubernetes-preserve-unknown-fields: true
+                            version:
+                              description: Version is the optional specification version
+                                of the attribute value
+                              type: string
+                          required:
+                          - name
+                          - value
+                          type: object
+                        type: array
+                      name:
+                        type: string
+                      referencePath:
+                        items:
+                          additionalProperties:
+                            type: string
+                          description: |-
+                            Identity describes the identity of an object.
+                            Only ascii characters are allowed
+                          type: object
+                        type: array
+                      version:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                required:
+                - kind
+                - name
+                type: object
+              suspend:
+                type: boolean
+            required:
+            - interval
+            - sourceRef
+            type: object
+          status:
+            description: ResourcePipelineStatus defines the observed state of ResourcePipeline.
+            properties:
+              conditions:
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              latestSnapshotDigest:
+                type: string
+              observedGeneration:
+                description: ObservedGeneration is the last reconciled generation.
+                format: int64
+                type: integer
+              snapshotName:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -1640,45 +2209,35 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Resource is the Schema for the resources API
+        description: Resource is the Schema for the resources API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: ResourceSpec defines the desired state of Resource
+            description: ResourceSpec defines the desired state of Resource.
             properties:
               interval:
+                description: Interval specifies the interval at which the Repository
+                  will be checked for updates.
                 type: string
-              outputTemplate:
-                description: SnapshotTemplateSpec defines the template used to create
-                  snapshots
-                properties:
-                  annotations:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  labels:
-                    additionalProperties:
-                      type: string
-                    type: object
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
               sourceRef:
-                description: SourceRef defines the input source from which the resource
-                  will be retrieved
+                description: SourceRef specifies the source object from which the
+                  resource should be retrieved.
                 minProperties: 1
                 properties:
                   apiVersion:
@@ -1700,15 +2259,33 @@ spec:
                       extraIdentity:
                         additionalProperties:
                           type: string
-                        description: ExtraIdentity is the identity of an object. An
-                          additional label with key "name" ist not allowed
+                        description: |-
+                          Identity describes the identity of an object.
+                          Only ascii characters are allowed
                         type: object
                       labels:
-                        description: Labels defines an optional set of additional
-                          labels describing the object.
+                        description: Labels describe a list of labels
                         items:
                           description: Label is a label that can be set on objects.
                           properties:
+                            merge:
+                              description: |-
+                                MergeAlgorithm optionally describes the desired merge handling used to
+                                merge the label value during a transfer.
+                              properties:
+                                algorithm:
+                                  description: |-
+                                    Algorithm optionally described the Merge algorithm used to
+                                    merge the label value during a transfer.
+                                  type: string
+                                config:
+                                  description: eConfig contains optional config for
+                                    the merge algorithm.
+                                  format: byte
+                                  type: string
+                              required:
+                              - algorithm
+                              type: object
                             name:
                               description: Name is the unique name of the label.
                               type: string
@@ -1729,29 +2306,28 @@ spec:
                           type: object
                         type: array
                       name:
-                        description: Name is the context unique name of the object.
                         type: string
                       referencePath:
                         items:
                           additionalProperties:
                             type: string
-                          description: Identity describes the identity of an object.
+                          description: |-
+                            Identity describes the identity of an object.
                             Only ascii characters are allowed
                           type: object
                         type: array
                       version:
-                        description: Version is the semver version of the object.
                         type: string
                     required:
                     - name
-                    - version
                     type: object
                 required:
                 - kind
                 - name
                 type: object
               suspend:
-                description: Suspend stops all operations on this object.
+                description: Suspend can be used to temporarily pause the reconciliation
+                  of the Resource.
                 type: boolean
             required:
             - interval
@@ -1760,47 +2336,48 @@ spec:
           status:
             default:
               observedGeneration: -1
-            description: ResourceStatus defines the observed state of Resource
+            description: ResourceStatus defines the observed state of Resource.
             properties:
               conditions:
+                description: Conditions holds the conditions for the ComponentVersion.
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -1814,11 +2391,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -1831,19 +2409,26 @@ spec:
                   type: object
                 type: array
               lastAppliedComponentVersion:
-                description: LastAppliedComponentVersion tracks the last applied component
-                  version. If there is a change we fire off a reconcile loop to get
-                  that new version.
+                description: LastAppliedComponentVersion holds the version of the
+                  last applied ComponentVersion for the ComponentVersion which contains
+                  this Resource.
                 type: string
               lastAppliedResourceVersion:
+                description: LastAppliedResourceVersion holds the version of the resource
+                  that was last applied (if applicable).
                 type: string
               latestSnapshotDigest:
+                description: LatestSnapshotDigest is a string representation of the
+                  digest for the most recent Resource snapshot.
                 type: string
               observedGeneration:
                 description: ObservedGeneration is the last reconciled generation.
                 format: int64
                 type: integer
               snapshotName:
+                description: |-
+                  SnapshotName specifies the name of the Snapshot that has been created to store the resource
+                  within the cluster and make it available for consumption by Flux controllers.
                 type: string
             type: object
         type: object
@@ -1856,8 +2441,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.0
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.14.0
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
@@ -1883,30 +2467,36 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Snapshot is the Schema for the snapshots API
+        description: Snapshot is the Schema for the snapshots API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: SnapshotSpec defines the desired state of Snapshot
+            description: SnapshotSpec defines the desired state of Snapshot.
             properties:
               digest:
                 type: string
               identity:
                 additionalProperties:
                   type: string
-                description: Identity describes the identity of an object. Only ascii
-                  characters are allowed
+                description: |-
+                  Identity describes the identity of an object.
+                  Only ascii characters are allowed
                 type: object
               suspend:
                 description: Suspend stops all operations on this object.
@@ -1919,47 +2509,47 @@ spec:
             - tag
             type: object
           status:
-            description: SnapshotStatus defines the observed state of Snapshot
+            description: SnapshotStatus defines the observed state of Snapshot.
             properties:
               conditions:
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -1973,11 +2563,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -2026,7 +2617,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
-  name: leader-election-role
+  name: ocm-leader-election-role
   namespace: ocm-system
 rules:
 - apiGroups:
@@ -2064,12 +2655,21 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
   labels:
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
   name: ocm-controller-manager-role
 rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - secrets
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
 - apiGroups:
   - ""
   resources:
@@ -2091,12 +2691,9 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - secrets
-  - serviceaccounts
+  - serviceaccounts/token
   verbs:
-  - get
-  - list
-  - watch
+  - create
 - apiGroups:
   - apps
   resources:
@@ -2215,6 +2812,32 @@ rules:
 - apiGroups:
   - delivery.ocm.software
   resources:
+  - resourcepipelines
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - delivery.ocm.software
+  resources:
+  - resourcepipelines/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - delivery.ocm.software
+  resources:
+  - resourcepipelines/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - delivery.ocm.software
+  resources:
   - resources
   verbs:
   - create
@@ -2265,6 +2888,31 @@ rules:
   - patch
   - update
 - apiGroups:
+  - external-secrets.io
+  resources:
+  - secretstores
+  - secretstores/status
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - helm.toolkit.fluxcd.io
+  resources:
+  - helmreleases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - kustomize.toolkit.fluxcd.io
   resources:
   - kustomizations
@@ -2289,6 +2937,7 @@ rules:
 - apiGroups:
   - source.toolkit.fluxcd.io
   resources:
+  - helmrepositories
   - ocirepositories
   verbs:
   - create
@@ -2310,7 +2959,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: leader-election-role
+  name: ocm-leader-election-role
 subjects:
 - kind: ServiceAccount
   name: ocm-controller
@@ -2332,10 +2981,27 @@ subjects:
   name: ocm-controller
   namespace: ocm-system
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: ocm-system
+    app.kubernetes.io/part-of: ocm
+  name: registry
+  namespace: ocm-system
+spec:
+  ports:
+  - name: registry
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: registry
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app: ocm-controller
     app.kubernetes.io/instance: ocm-system
     app.kubernetes.io/part-of: ocm
     control-plane: controller
@@ -2360,8 +3026,8 @@ spec:
         - --oci-registry-addr=registry.ocm-system.svc.cluster.local:5000
         command:
         - /manager
-        image: ghcr.io/open-component-model/ocm-controller:v0.8.1
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/open-component-model/ocm-controller:latest
+        imagePullPolicy: Always
         livenessProbe:
           httpGet:
             path: /healthz
@@ -2378,7 +3044,7 @@ spec:
         resources:
           limits:
             cpu: 500m
-            memory: 128Mi
+            memory: 256Mi
           requests:
             cpu: 10m
             memory: 64Mi
@@ -2388,12 +3054,9 @@ spec:
             drop:
             - ALL
         volumeMounts:
-        - name: certs
-          mountPath: /etc/ssl/certs
-      initContainers:
-      - image: ghcr.io/open-component-model/ocm-registry:v0.0.1-dev
-        imagePullPolicy: IfNotPresent
-        name: init-registry
+        - mountPath: /etc/ssl/certs/registry-root.pem
+          name: certificates
+          subPath: registry-root.pem
       securityContext:
         runAsNonRoot: true
         seccompProfile:
@@ -2401,9 +3064,76 @@ spec:
       serviceAccountName: ocm-controller
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: certs
+      - name: certificates
         secret:
-          secretName: ocm-dev-ca
           items:
-          - key: ca-certificates.crt
-            path: ca-certificates.crt
+          - key: ca.crt
+            path: registry-root.pem
+          secretName: ocm-registry-tls-certs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: registry
+    app.kubernetes.io/instance: ocm-system
+    app.kubernetes.io/part-of: ocm
+  name: registry
+  namespace: ocm-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      containers:
+      - env:
+        - name: REGISTRY_HTTP_TLS_CERTIFICATE
+          value: /certs/cert.pem
+        - name: REGISTRY_HTTP_TLS_KEY
+          value: /certs/key.pem
+        - name: REGISTRY_HTTP_TLS_CLIENTCAS_0
+          value: /certs/ca.pem
+        - name: REGISTRY_STORAGE_DELETE_ENABLED
+          value: "true"
+        image: registry:2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          successThreshold: 1
+          tcpSocket:
+            port: 5000
+          timeoutSeconds: 1
+        name: registry
+        ports:
+        - containerPort: 5000
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 5000
+          timeoutSeconds: 1
+        volumeMounts:
+        - mountPath: /certs
+          name: ocm-registry-tls-certs
+      enableServiceLinks: true
+      volumes:
+      - name: ocm-registry-tls-certs
+        secret:
+          items:
+          - key: tls.crt
+            path: cert.pem
+          - key: tls.key
+            path: key.pem
+          - key: ca.crt
+            path: ca.pem
+          secretName: ocm-registry-tls-certs
+      - emptyDir: {}
+        name: registry

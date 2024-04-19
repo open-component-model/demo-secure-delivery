@@ -2,3 +2,4 @@ images/
 certs/
 flux-repo/
 component-repo/
+manifests/cert-manager/cert-manager.yaml

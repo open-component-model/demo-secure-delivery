@@ -4,6 +4,7 @@ metadata:
   name: weave-gitops
   namespace: ocm-system
 spec:
+  interval: 10s
   sourceRef:
     kind: Configuration
     name: weave-gitops

@@ -35,9 +35,36 @@ function wait-for-endpoint {
 }
 
 function configure-tls {
+    kubectl create ns ocm-system
+    CERT_MANAGER_VERSION=${CERT_MANAGER_VERSION:-v1.13.1}
+    if [ ! -e 'manifests/cert-manager/cert-manager.yaml' ]; then
+        echo "fetching cert-manager manifest for version ${CERT_MANAGER_VERSION}"
+        curl -L https://github.com/cert-manager/cert-manager/releases/download/${CERT_MANAGER_VERSION}/cert-manager.yaml -o manifests/cert-manager/cert-manager.yaml
+    fi
+
     mkdir -p ./certs && rm -f ./certs/*.pem
-    mkcert -install 2>/dev/null
-    mkcert -cert-file=./certs/cert.pem -key-file=./certs/key.pem gitea.ocm.dev weave-gitops.ocm.dev podinfo.ocm.dev ci.ocm.dev events.ci.ocm.dev
+    echo -n 'installing cert-manager'
+    kubectl apply -f manifests/cert-manager/cert-manager.yaml
+    kubectl wait --for=condition=Available=True Deployment/cert-manager -n cert-manager --timeout=60s
+    kubectl wait --for=condition=Available=True Deployment/cert-manager-webhook -n cert-manager --timeout=60s
+    kubectl wait --for=condition=Available=True Deployment/cert-manager-cainjector -n cert-manager --timeout=60s
+    echo 'done'
+
+    echo -n 'applying root certificate issuer'
+    kubectl apply -f manifests/cert-manager/cluster_issuer.yaml
+    echo 'done'
+
+    echo -n 'waiting for root certificate to be generated...'
+    kubectl wait --for=condition=Ready=true Certificate/bootstrap-certificate -n ocm-system --timeout=60s
+    echo 'done'
+
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/rootCA.pem
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/cert.pem
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.key']}" | base64 -d > ./certs/key.pem
+    echo -n 'installing root certificate into local trust store...'
+    CAROOT=./certs mkcert -install 2>/dev/null
+
+    echo 'done'
 }
 
 function configure-signing-keys {
@@ -62,13 +89,19 @@ function create-weave-gitops-component {
 }
 
 function deploy-ocm-controller {
-    MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
+    MKCERT_CA="./certs/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
-    kubectl create namespace ocm-system
+    kubectl create namespace ocm-system || true
     kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./signing-keys/$SIGNING_KEY_NAME.rsa.pub
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
+
+    # # use ocm controller install
+    # docker run --network host -v $HOME/.kube:/home/ocmUser/.kube \
+    #     -e KUBECONFIG=/home/ocmUser/.kube/config \
+    #     ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest controller install
+
     kubectl apply -f ./manifests/ocm.yaml
     kubectl apply -f ./manifests/replication.yaml
     rm $TMPFILE
@@ -83,7 +116,7 @@ function deploy-ingress {
 }
 
 function deploy-tekton {
-    MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
+    MKCERT_CA="./certs/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
     kubectl create ns tekton-pipelines
@@ -296,7 +329,7 @@ function configure-ssh {
 }
 
 function bootstrap-flux {
-    MKCERT_CA="$(mkcert -CAROOT)/rootCA.pem"
+    MKCERT_CA="./certs/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
     kubectl create ns flux-system
