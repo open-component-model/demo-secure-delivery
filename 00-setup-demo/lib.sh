@@ -35,6 +35,7 @@ function wait-for-endpoint {
 }
 
 function configure-tls {
+    kubectl create ns ocm-system
     CERT_MANAGER_VERSION=${CERT_MANAGER_VERSION:-v1.13.1}
     if [ ! -e 'manifests/cert-manager/cert-manager.yaml' ]; then
         echo "fetching cert-manager manifest for version ${CERT_MANAGER_VERSION}"
@@ -54,12 +55,12 @@ function configure-tls {
     echo 'done'
 
     echo -n 'waiting for root certificate to be generated...'
-    kubectl wait --for=condition=Ready=true Certificate/mpas-bootstrap-certificate -n cert-manager --timeout=60s
+    kubectl wait --for=condition=Ready=true Certificate/bootstrap-certificate -n ocm-system --timeout=60s
     echo 'done'
 
-    kubectl get secret ocm-registry-tls-certs -n cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/rootCA.pem
-    kubectl get secret ocm-registry-tls-certs -n cert-manager -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/cert.pem
-    kubectl get secret ocm-registry-tls-certs -n cert-manager -o jsonpath="{.data['tls\.key']}" | base64 -d > ./certs/key.pem
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/rootCA.pem
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.crt']}" | base64 -d > ./certs/cert.pem
+    kubectl get secret ocm-registry-tls-certs -n ocm-system -o jsonpath="{.data['tls\.key']}" | base64 -d > ./certs/key.pem
     echo -n 'installing root certificate into local trust store...'
     CAROOT=./certs mkcert -install 2>/dev/null
 
@@ -91,7 +92,7 @@ function deploy-ocm-controller {
     MKCERT_CA="./certs/rootCA.pem"
     TMPFILE=$(mktemp)
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
-    kubectl create namespace ocm-system
+    kubectl create namespace ocm-system || true
     kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./signing-keys/$SIGNING_KEY_NAME.rsa.pub
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
