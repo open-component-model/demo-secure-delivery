@@ -199,6 +199,7 @@ function init-repository {
     rm -rf ./flux-repo/ && mkdir ./flux-repo
     cp -R ./flux-repo-src/main-branch/. ./flux-repo
     git -C ./flux-repo init
+    git -C ./flux-repo checkout -b main
     git -C ./flux-repo add .
     git -C ./flux-repo commit -m "initialise repository"
     git -C ./flux-repo remote add origin ssh://git@gitea-ssh.gitea:2222/software-consumer/$PRIVATE_REPO_NAME.git
@@ -209,6 +210,7 @@ function init-component-repository {
     rm -rf ./component-repo/ && mkdir ./component-repo
     cp -R ./component-repo-src/main-branch/. ./component-repo
     git -C ./component-repo init
+    git -C ./component-repo checkout -b main
     git -C ./component-repo add .
     git -C ./component-repo commit -m "initialise repository"
     git -C ./component-repo remote add origin ssh://git@gitea-ssh.gitea:2222/software-provider/podinfo-component.git
