@@ -18,11 +18,14 @@ tools=(helm flux kind jq kubectl ocm mkcert tea git curl docker gzip)
 images=(
 ghcr.io/open-component-model/podinfo:6.3.5-static
 ghcr.io/open-component-model/podinfo:6.3.6-static
+ghcr.io/open-component-model/ocm-controller:v0.23.3
+ghcr.io/open-component-model/replication-controller:v0.13.1
+ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
 ghcr.io/weaveworks/wego-app:v0.24.0
-ghcr.io/fluxcd/helm-controller:v0.33.0
-ghcr.io/fluxcd/kustomize-controller:v1.0.0-rc.3
-ghcr.io/fluxcd/notification-controller:v1.0.0-rc.3
-ghcr.io/fluxcd/source-controller:v1.0.0-rc.3
+ghcr.io/fluxcd/helm-controller:v1.0.1
+ghcr.io/fluxcd/kustomize-controller:v1.3.0
+ghcr.io/fluxcd/notification-controller:v1.3.0
+ghcr.io/fluxcd/source-controller:v1.3.0
 gitea/gitea:1.19.3
 registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230312-helm-chart-4.5.2-28-g66a760794
 registry.k8s.io/ingress-nginx/controller:v1.7.1
@@ -34,8 +37,6 @@ registry.k8s.io/kube-controller-manager:v1.27.1
 registry.k8s.io/kube-proxy:v1.27.1
 registry.k8s.io/kube-scheduler:v1.27.1
 docker.io/kindest/local-path-provisioner:v20230511-dc714da8
-ghcr.io/open-component-model/ocm-controller:v0.19.0
-ghcr.io/open-component-model/replication-controller:v0.13.0
 registry:2
 cgr.dev/chainguard/busybox
 docker.io/library/alpine:latest
@@ -49,7 +50,6 @@ gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.24.0
-ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
 )
 
 preloadimages=(
