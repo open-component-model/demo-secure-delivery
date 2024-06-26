@@ -103,7 +103,7 @@ function deploy-ocm-controller {
     #     ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest controller install
 
     kubectl apply -f ./manifests/ocm.yaml
-    kubectl apply -f ./manifests/replication.yaml
+    # kubectl apply -f ./manifests/replication.yaml
     rm $TMPFILE
 }
 

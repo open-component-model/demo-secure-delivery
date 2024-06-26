@@ -7,7 +7,13 @@ spec:
   interval: 1m0s
   component: ocm.software/demos/weave-gitops
   repository:
+    url: gitea.ocm.dev/software-provider
+    secretRef:
+      name: gitea-registry-credentials
+  destination:
     url: gitea.ocm.dev/software-consumer
+    secretRef:
+      name: gitea-registry-credentials
   version:
     semver: ">=v1.0.0"
   verify:

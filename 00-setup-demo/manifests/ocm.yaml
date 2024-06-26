@@ -1,11 +1,11 @@
+---
+# Source: ocm-controller/crds/delivery.ocm.software_componentdescriptors.yaml
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: componentdescriptors.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -456,15 +456,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_componentversions.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: componentversions.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -520,20 +520,40 @@ spec:
               component:
                 description: Component specifies the name of the ComponentVersion.
                 type: string
+              destination:
+                description: |-
+                  Destination defines the destination repository to transfer this component into.
+                  If defined this destination is used for any further operations like fetching a Resource.
+                properties:
+                  secretRef:
+                    description: SecretRef specifies the credentials used to access
+                      the OCI registry.
+                    properties:
+                      name:
+                        default: ""
+                        description: |-
+                          Name of the referent.
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
+                          TODO: Add other useful fields. apiVersion, kind, uid?
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  url:
+                    description: |-
+                      URL specifies the URL of the OCI registry in which the ComponentVersion is stored.
+                      MUST NOT CONTAIN THE SCHEME.
+                    type: string
+                required:
+                - url
+                type: object
               interval:
                 description: Interval specifies the interval at which the Repository
                   will be checked for updates.
                 type: string
-              references:
-                description: References specifies configuration for the handling of
-                  nested component references.
-                properties:
-                  expand:
-                    description: |-
-                      Expand specifies if a Kubernetes API resource of kind ComponentDescriptor should
-                      be generated for each component reference that is present in the root ComponentVersion.
-                    type: boolean
-                type: object
               repository:
                 description: |-
                   Repository provides details about the OCI repository from which the component
@@ -544,10 +564,15 @@ spec:
                       the OCI registry.
                     properties:
                       name:
+                        default: ""
                         description: |-
                           Name of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          This field is effectively required, but due to backwards compatibility is
+                          allowed to be empty. Instances of this type with an empty value here are
+                          almost certainly wrong.
                           TODO: Add other useful fields. apiVersion, kind, uid?
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
@@ -593,10 +618,15 @@ spec:
                             a public key.
                           properties:
                             name:
+                              default: ""
                               description: |-
                                 Name of the referent.
-                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                This field is effectively required, but due to backwards compatibility is
+                                allowed to be empty. Instances of this type with an empty value here are
+                                almost certainly wrong.
                                 TODO: Add other useful fields. apiVersion, kind, uid?
+                                More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Drop `kubebuilder:default` when controller-gen doesn't need it https://github.com/kubernetes-sigs/kubebuilder/issues/3896.
                               type: string
                           type: object
                           x-kubernetes-map-type: atomic
@@ -743,6 +773,10 @@ spec:
                 description: ReconciledVersion is a string containing the version
                   of the latest reconciled ComponentVersion.
                 type: string
+              replicatedRepositoryURL:
+                description: ReplicatedRepositoryURL defines the final location of
+                  the reconciled Component.
+                type: string
               verified:
                 description: Verified is a boolean indicating whether all the specified
                   signatures have been verified and are valid.
@@ -753,15 +787,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_configurations.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: configurations.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -833,6 +867,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -975,6 +1010,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -1052,7 +1088,7 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               valuesFrom:
                 description: |-
-                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository.
+                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository or ObjectReference.
                   An optional subpath defines the path within the source from which the values should be resolved.
                 properties:
                   configMapSource:
@@ -1107,6 +1143,98 @@ spec:
                     required:
                     - path
                     - sourceRef
+                    type: object
+                  sourceRef:
+                    description: ObjectReference defines a resource which may be accessed
+                      via a snapshot or component version
+                    minProperties: 1
+                    properties:
+                      apiVersion:
+                        description: API version of the referent, if not specified
+                          the Kubernetes preferred version will be used.
+                        type: string
+                      kind:
+                        description: Kind of the referent.
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: Namespace of the referent, when not specified
+                          it acts as LocalObjectReference.
+                        type: string
+                      resourceRef:
+                        description: ResourceRef defines what resource to fetch.
+                        properties:
+                          extraIdentity:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              Identity describes the identity of an object.
+                              Only ascii characters are allowed
+                            type: object
+                          labels:
+                            description: Labels describe a list of labels
+                            items:
+                              description: Label is a label that can be set on objects.
+                              properties:
+                                merge:
+                                  description: |-
+                                    MergeAlgorithm optionally describes the desired merge handling used to
+                                    merge the label value during a transfer.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        Algorithm optionally described the Merge algorithm used to
+                                        merge the label value during a transfer.
+                                      type: string
+                                    config:
+                                      description: eConfig contains optional config
+                                        for the merge algorithm.
+                                      format: byte
+                                      type: string
+                                  required:
+                                  - algorithm
+                                  type: object
+                                name:
+                                  description: Name is the unique name of the label.
+                                  type: string
+                                signing:
+                                  description: Signing describes whether the label
+                                    should be included into the signature
+                                  type: boolean
+                                value:
+                                  description: Value is the json/yaml data of the
+                                    label
+                                  x-kubernetes-preserve-unknown-fields: true
+                                version:
+                                  description: Version is the optional specification
+                                    version of the attribute value
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            type: array
+                          name:
+                            type: string
+                          referencePath:
+                            items:
+                              additionalProperties:
+                                type: string
+                              description: |-
+                                Identity describes the identity of an object.
+                                Only ascii characters are allowed
+                              type: object
+                            type: array
+                          version:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    required:
+                    - kind
+                    - name
                     type: object
                 type: object
             type: object
@@ -1205,15 +1333,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_fluxdeployers.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: fluxdeployers.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -1287,6 +1415,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -1357,6 +1486,10 @@ spec:
                 - kind
                 - name
                 type: object
+              waitForReady:
+                description: WaitForReady if set will wait for all created resources
+                  to be ready before itself becomes Ready.
+                type: boolean
             required:
             - interval
             - sourceRef
@@ -1433,6 +1566,8 @@ spec:
                   - type
                   type: object
                 type: array
+              helmRelease:
+                type: string
               kustomization:
                 type: string
               observedGeneration:
@@ -1447,15 +1582,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_localizations.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: localizations.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -1527,6 +1662,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -1669,6 +1805,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -1746,7 +1883,7 @@ spec:
                 x-kubernetes-preserve-unknown-fields: true
               valuesFrom:
                 description: |-
-                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository.
+                  ValuesSource provides access to values from an external Source such as a ConfigMap or GitRepository or ObjectReference.
                   An optional subpath defines the path within the source from which the values should be resolved.
                 properties:
                   configMapSource:
@@ -1801,6 +1938,98 @@ spec:
                     required:
                     - path
                     - sourceRef
+                    type: object
+                  sourceRef:
+                    description: ObjectReference defines a resource which may be accessed
+                      via a snapshot or component version
+                    minProperties: 1
+                    properties:
+                      apiVersion:
+                        description: API version of the referent, if not specified
+                          the Kubernetes preferred version will be used.
+                        type: string
+                      kind:
+                        description: Kind of the referent.
+                        type: string
+                      name:
+                        description: Name of the referent.
+                        type: string
+                      namespace:
+                        description: Namespace of the referent, when not specified
+                          it acts as LocalObjectReference.
+                        type: string
+                      resourceRef:
+                        description: ResourceRef defines what resource to fetch.
+                        properties:
+                          extraIdentity:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              Identity describes the identity of an object.
+                              Only ascii characters are allowed
+                            type: object
+                          labels:
+                            description: Labels describe a list of labels
+                            items:
+                              description: Label is a label that can be set on objects.
+                              properties:
+                                merge:
+                                  description: |-
+                                    MergeAlgorithm optionally describes the desired merge handling used to
+                                    merge the label value during a transfer.
+                                  properties:
+                                    algorithm:
+                                      description: |-
+                                        Algorithm optionally described the Merge algorithm used to
+                                        merge the label value during a transfer.
+                                      type: string
+                                    config:
+                                      description: eConfig contains optional config
+                                        for the merge algorithm.
+                                      format: byte
+                                      type: string
+                                  required:
+                                  - algorithm
+                                  type: object
+                                name:
+                                  description: Name is the unique name of the label.
+                                  type: string
+                                signing:
+                                  description: Signing describes whether the label
+                                    should be included into the signature
+                                  type: boolean
+                                value:
+                                  description: Value is the json/yaml data of the
+                                    label
+                                  x-kubernetes-preserve-unknown-fields: true
+                                version:
+                                  description: Version is the optional specification
+                                    version of the attribute value
+                                  type: string
+                              required:
+                              - name
+                              - value
+                              type: object
+                            type: array
+                          name:
+                            type: string
+                          referencePath:
+                            items:
+                              additionalProperties:
+                                type: string
+                              description: |-
+                                Identity describes the identity of an object.
+                                Only ascii characters are allowed
+                              type: object
+                            type: array
+                          version:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                    required:
+                    - kind
+                    - name
                     type: object
                 type: object
             type: object
@@ -1899,15 +2128,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_resourcepipelines.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: resourcepipelines.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -2013,6 +2242,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -2175,15 +2405,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_resources.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: resources.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -2255,6 +2485,7 @@ spec:
                       acts as LocalObjectReference.
                     type: string
                   resourceRef:
+                    description: ResourceRef defines what resource to fetch.
                     properties:
                       extraIdentity:
                         additionalProperties:
@@ -2436,15 +2667,15 @@ spec:
     storage: true
     subresources:
       status: {}
+
+---
+# Source: ocm-controller/crds/delivery.ocm.software_snapshots.yaml
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: snapshots.delivery.ocm.software
 spec:
   group: delivery.ocm.software
@@ -2601,63 +2832,19 @@ spec:
     storage: true
     subresources:
       status: {}
+
 ---
+# Source: ocm-controller/templates/service_account.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: ocm-controller
   namespace: ocm-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
-  name: ocm-leader-election-role
-  namespace: ocm-system
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
----
+# Source: ocm-controller/templates/role.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: ocm-controller-manager-role
 rules:
 - apiGroups:
@@ -2948,12 +3135,64 @@ rules:
   - update
   - watch
 ---
+# Source: ocm-controller/templates/role_binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ocm-controller-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ocm-controller-manager-role
+subjects:
+- kind: ServiceAccount
+  name: ocm-controller
+  namespace: ocm-system
+---
+# Source: ocm-controller/templates/leader_election_role.yaml
+# permissions to do leader election.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ocm-leader-election-role
+  namespace: ocm-system
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+# Source: ocm-controller/templates/leader_election_role_binding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: ocm-leader-election-rolebinding
   namespace: ocm-system
 roleRef:
@@ -2965,53 +3204,34 @@ subjects:
   name: ocm-controller
   namespace: ocm-system
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
-  name: ocm-controller-rolebinding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: ocm-controller-manager-role
-subjects:
-- kind: ServiceAccount
-  name: ocm-controller
-  namespace: ocm-system
----
+# Source: ocm-controller/templates/service_registry.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: registry
   namespace: ocm-system
 spec:
-  ports:
-  - name: registry
-    port: 5000
-    targetPort: 5000
   selector:
     app: registry
+  ports:
+    - name: registry
+      port: 5000
+      targetPort: 5000
 ---
+# Source: ocm-controller/templates/deployment_manager.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: ocm-controller
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
-    control-plane: controller
   name: ocm-controller
   namespace: ocm-system
+  labels:
+    control-plane: controller
+    app: ocm-controller
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: ocm-controller
+  replicas: 1
   template:
     metadata:
       annotations:
@@ -3019,22 +3239,35 @@ spec:
       labels:
         app: ocm-controller
     spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-      - args:
+      - command:
+        - /manager
+        args:
         - --zap-log-level=4
         - --leader-elect
         - --oci-registry-addr=registry.ocm-system.svc.cluster.local:5000
-        command:
-        - /manager
-        image: ghcr.io/open-component-model/ocm-controller:latest
-        imagePullPolicy: Always
+        image: "ghcr.io/open-component-model/ocm-controller:v0.23.9-dev"
+        name: manager
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /etc/ssl/certs/registry-root.pem
+            name: certificates
+            subPath: registry-root.pem
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
         livenessProbe:
           httpGet:
             path: /healthz
             port: 8081
           initialDelaySeconds: 15
           periodSeconds: 20
-        name: manager
         readinessProbe:
           httpGet:
             path: /readyz
@@ -3048,38 +3281,24 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-        volumeMounts:
-        - mountPath: /etc/ssl/certs/registry-root.pem
-          name: certificates
-          subPath: registry-root.pem
-      securityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
       serviceAccountName: ocm-controller
       terminationGracePeriodSeconds: 10
       volumes:
-      - name: certificates
-        secret:
-          items:
-          - key: ca.crt
-            path: registry-root.pem
-          secretName: ocm-registry-tls-certs
+        - name: certificates
+          secret:
+            items:
+            - key: ca.crt
+              path: registry-root.pem
+            secretName: ocm-registry-tls-certs
 ---
+# Source: ocm-controller/templates/deployment_registry.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: registry
-    app.kubernetes.io/instance: ocm-system
-    app.kubernetes.io/part-of: ocm
   name: registry
   namespace: ocm-system
+  labels:
+    app: registry
 spec:
   replicas: 1
   selector:
@@ -3090,50 +3309,58 @@ spec:
       labels:
         app: registry
     spec:
-      containers:
-      - env:
-        - name: REGISTRY_HTTP_TLS_CERTIFICATE
-          value: /certs/cert.pem
-        - name: REGISTRY_HTTP_TLS_KEY
-          value: /certs/key.pem
-        - name: REGISTRY_HTTP_TLS_CLIENTCAS_0
-          value: /certs/ca.pem
-        - name: REGISTRY_STORAGE_DELETE_ENABLED
-          value: "true"
-        image: registry:2
-        livenessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 15
-          periodSeconds: 20
-          successThreshold: 1
-          tcpSocket:
-            port: 5000
-          timeoutSeconds: 1
-        name: registry
-        ports:
-        - containerPort: 5000
-        readinessProbe:
-          failureThreshold: 3
-          initialDelaySeconds: 2
-          periodSeconds: 5
-          successThreshold: 1
-          tcpSocket:
-            port: 5000
-          timeoutSeconds: 1
-        volumeMounts:
-        - mountPath: /certs
-          name: ocm-registry-tls-certs
       enableServiceLinks: true
+      containers:
+        - name: registry
+          image: registry:2
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REGISTRY_STORAGE_DELETE_ENABLED
+              value: "true"
+            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+              value: /certs/cert.pem
+            - name: REGISTRY_HTTP_TLS_KEY
+              value: /certs/key.pem
+            - name: REGISTRY_HTTP_TLS_CLIENTCAS_0
+              value: /certs/ca.pem
+          volumeMounts:
+            - mountPath: /certs
+              name: ocm-registry-tls-certs
+          readinessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 2
+            timeoutSeconds: 1
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
       volumes:
-      - name: ocm-registry-tls-certs
-        secret:
-          items:
-          - key: tls.crt
-            path: cert.pem
-          - key: tls.key
-            path: key.pem
-          - key: ca.crt
-            path: ca.pem
-          secretName: ocm-registry-tls-certs
-      - emptyDir: {}
-        name: registry
+        - name: registry
+          emptyDir: {}
+        - name: ocm-registry-tls-certs
+          secret:
+            items:
+            - key: tls.crt
+              path: cert.pem
+            - key: tls.key
+              path: key.pem
+            - key: ca.crt
+              path: ca.pem
+            secretName: ocm-registry-tls-certs
+---
+# Source: ocm-controller/templates/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ocm-system
+  annotations:
+    "helm.sh/hook": pre-install

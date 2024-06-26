@@ -18,8 +18,7 @@ tools=(helm flux kind jq kubectl ocm mkcert tea git curl docker gzip)
 images=(
 ghcr.io/open-component-model/podinfo:6.3.5-static
 ghcr.io/open-component-model/podinfo:6.3.6-static
-ghcr.io/open-component-model/ocm-controller:v0.23.3
-ghcr.io/open-component-model/replication-controller:v0.13.1
+ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
 ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
 ghcr.io/weaveworks/wego-app:v0.24.0
 ghcr.io/fluxcd/helm-controller:v1.0.1
