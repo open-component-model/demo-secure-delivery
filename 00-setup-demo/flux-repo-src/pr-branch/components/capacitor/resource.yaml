@@ -1,19 +1,12 @@
 apiVersion: delivery.ocm.software/v1alpha1
-kind: Localization
+kind: Resource
 metadata:
   name: capacitor
   namespace: ocm-system
 spec:
-  interval: 1m
+  interval: 5s
   sourceRef:
     kind: ComponentVersion
     name: capacitor
     resourceRef:
       name: manifests
-      version: latest
-  configRef:
-    kind: ComponentVersion
-    name: capacitor
-    resourceRef:
-      name: config
-      version: latest

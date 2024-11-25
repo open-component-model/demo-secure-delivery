@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 10s
   sourceRef:
-    kind: Configuration
+    kind: Resource
     name: capacitor
   kustomizationTemplate:
     interval: 1m0s
