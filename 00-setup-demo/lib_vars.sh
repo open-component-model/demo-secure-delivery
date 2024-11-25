@@ -9,7 +9,7 @@ SIGNING_KEY_NAME=ocm-signing
 SSH_KEY_NAME=ocm-private-demo-key
 SSH_KEY_PATH=$HOME/.ssh/$SSH_KEY_NAME
 
-HOSTS=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev weave-gitops.ocm.dev)
+HOSTS=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev capacitor.ocm.dev)
 
 os=$(uname -s)
 
@@ -20,7 +20,7 @@ ghcr.io/open-component-model/podinfo:6.3.5-static
 ghcr.io/open-component-model/podinfo:6.3.6-static
 ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
 ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
-ghcr.io/weaveworks/wego-app:v0.24.0
+ghcr.io/gimlet-io/capacitor:v0.4.8
 ghcr.io/fluxcd/helm-controller:v1.0.1
 ghcr.io/fluxcd/kustomize-controller:v1.3.0
 ghcr.io/fluxcd/notification-controller:v1.3.0
@@ -54,7 +54,7 @@ gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.24.0
 preloadimages=(
 ghcr.io/open-component-model/podinfo:6.3.5-static
 ghcr.io/open-component-model/podinfo:6.3.6-static
-ghcr.io/weaveworks/wego-app:v0.24.0
+ghcr.io/gimlet-io/capacitor:v0.4.8
 ghcr.io/fluxcd/helm-controller:v1.0.1
 ghcr.io/fluxcd/kustomize-controller:v1.3.0
 ghcr.io/fluxcd/notification-controller:v1.3.0

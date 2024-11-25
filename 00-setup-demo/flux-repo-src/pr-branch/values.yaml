@@ -2,5 +2,3 @@ podinfo:
   replicas: 1
   message: "Hello from podinfo"
   serviceAccountName: ocm-ops
-weave-gitops:
-  serviceAccountName: ocm-ops

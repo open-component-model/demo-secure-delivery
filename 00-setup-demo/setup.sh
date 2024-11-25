@@ -76,8 +76,8 @@ configure-ssh
 p "deploy tekton"
 deploy-tekton
 
-p "create weave gitops component"
-create-weave-gitops-component
+p "create capacitor component"
+create-capacitor-component
 
 p "initialise repository"
 init-repository

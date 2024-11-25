@@ -1,4 +1,4 @@
-name: ocm.software/demos/weave-gitops
+name: ocm.software/demos/capacitor
 provider:
   name: ocm.software
 resources:
@@ -6,13 +6,13 @@ resources:
   type: ociImage
   input:
     type: docker
-    path: ghcr.io/weaveworks/wego-app:v0.24.0
+    path: ghcr.io/gimlet-io/capacitor-manifests:v0.4.8
 - name: chart
   type: ociImage
   input:
     type: helm
     version: 4.0.22
-    path: weave-gitops-4.0.22.tgz
+    path: capacitor-0.4.8.tgz
 - name: manifests
   type: dir
   input:

@@ -9,7 +9,7 @@ spec:
   path: ./components/podinfo
   prune: true
   dependsOn:
-  - name: weave-gitops-component
+  - name: capacitor-component
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -17,11 +17,11 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: weave-gitops-component
+  name: capacitor-component
   namespace: flux-system
 spec:
   interval: 30s
-  path: ./components/weave-gitops
+  path: ./components/capacitor
   prune: true
   sourceRef:
     kind: GitRepository

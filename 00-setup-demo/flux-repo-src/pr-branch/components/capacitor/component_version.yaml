@@ -1,11 +1,11 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: ComponentVersion
 metadata:
-  name: weave-gitops
+  name: capacitor
   namespace: ocm-system
 spec:
   interval: 1m0s
-  component: ocm.software/demos/weave-gitops
+  component: ocm.software/demos/capacitor
   repository:
     url: gitea.ocm.dev/software-provider
     secretRef:

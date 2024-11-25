@@ -1,13 +1,13 @@
 apiVersion: delivery.ocm.software/v1alpha1
 kind: FluxDeployer
 metadata:
-  name: weave-gitops
+  name: capacitor
   namespace: ocm-system
 spec:
   interval: 10s
   sourceRef:
     kind: Configuration
-    name: weave-gitops
+    name: capacitor
   kustomizationTemplate:
     interval: 1m0s
     path: ./

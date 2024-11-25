@@ -80,8 +80,8 @@ function deploy-gitea {
     kubectl create secret -n gitea tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
 }
 
-function create-weave-gitops-component {
-    cd weave-gitops/
+function create-capacitor-component {
+    cd capacitor/
     make build
     make sign
     make push

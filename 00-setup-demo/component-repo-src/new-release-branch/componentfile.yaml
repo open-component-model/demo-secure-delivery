@@ -27,6 +27,6 @@ resources:
     path: src/ocm-ctrl/config.yaml
     compress: true
 componentReferences:
-- name: weave-gitops
-  componentName: ocm.software/demos/weave-gitops
+- name: capacitor
+  componentName: ocm.software/demos/capacitor
   version: v1.0.0
