@@ -97,11 +97,6 @@ function deploy-ocm-controller {
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
 
-    # # use ocm controller install
-    # docker run --network host -v $HOME/.kube:/home/ocmUser/.kube \
-    #     -e KUBECONFIG=/home/ocmUser/.kube/config \
-    #     ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest controller install
-
     kubectl apply -f ./manifests/ocm.yaml
     # kubectl apply -f ./manifests/replication.yaml
     rm $TMPFILE
