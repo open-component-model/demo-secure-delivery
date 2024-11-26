@@ -1,7 +1,7 @@
 #!/bin/bash
 # libary function vars
 # Version: v1.0.0
-# Author: Piaras Hoban <piaras@weave.works>
+# Author: Piaras Hoban <piaras@weave.works>, Gergely Brautigam <gergely@kubermatic.com>
 
 PRIVATE_REPO_NAME=ocm-applications
 SIGNING_KEY_NAME=ocm-signing

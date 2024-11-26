@@ -21,11 +21,11 @@ The software consumer organization models an air-gapped scenario where applicati
 
 The software consumer organization contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains the Kubernetes manifests required to deploy the component published by the software provider.
 
-Once this pull request is merged the Flux machinery will deploy the dependency `weave-gitops` and subsequently the `podinfo` component. The [weave-gitops dashboard](https://weave-gitops.ocm.dev) can be used to understand the state of the cluster.
+Once this pull request is merged the Flux machinery will deploy the dependency `capacitor` and subsequently the `podinfo` component. The [capacitor](https://capacitor.ocm.dev) can be used to understand the state of the cluster.
 
 ### Walkthrough
 
-Instructions are provided to guide you through the process of deploying the demo environment, cutting a release for "podinfo," verifying the release automation, installing the component, viewing the Weave GitOps dashboard, accessing the deployed application, applying configuration changes, monitoring the application update, and cutting a new release with updated features.
+Instructions are provided to guide you through the process of deploying the demo environment, cutting a release for "podinfo," verifying the release automation, installing the component, viewing the Capacitor GitOps dashboard, accessing the deployed application, applying configuration changes, monitoring the application update, and cutting a new release with updated features.
 
 #### 1. Setup demo environment
 
@@ -60,17 +60,17 @@ Once the release is published, navigate to https://ci.ocm.dev/#/namespaces/tekto
 
 When the release pipeline has been completed we can install the component. Navigate to https://gitea.ocm.dev/software-consumer/ocm-applications/pulls/1 and merge the pull request.
 
-#### 5. View the Weave GitOps Dashboard
+#### 5. View the Capacitor Dashboard
 
-![weave-gitops](./docs/images/weave-gitops.png)
+![capacitor](./docs/images/capacitor.png)
 
-With a minute or so Flux will reconcile the Weave GitOps component and the dashboard will be accessible at https://weave-gitops.ocm.dev. You can login with username: `admin` and password `password`.
+With a minute or so Flux will reconcile the Capacitor component and the dashboard will be accessible at https://capacitor.ocm.dev.
 
 #### 5. View the application
 
 ![podinfo](./docs/images/application.png)
 
-We can view the `podinfo` Helm release that's been deployed in the default namespace: https://weave-gitops.ocm.dev/helm_release/graph?clusterName=Default&name=podinfo&namespace=default
+We can view the `podinfo` Helm release that's been deployed in the default namespace: https://capacitor.ocm.dev/
 
 We can also view the running application at https://podinfo.ocm.dev
 
@@ -86,8 +86,6 @@ and add the following:
 podinfo:
   replicas: 2
   message: "Hello Open Component Model!"
-  serviceAccountName: ocm-ops
-weave-gitops:
   serviceAccountName: ocm-ops
 ```
 
@@ -109,7 +107,7 @@ Once the release is published, navigate to https://ci.ocm.dev/#/namespaces/tekto
 
 ![update-wego](./docs/images/update-wego.png)
 
-Jump back to https://weave-gitops.ocm.dev to view the rollout of the new release.
+Jump back to https://capacitor.ocm.dev to view the rollout of the new release.
 
 #### 11. View the updated application
 
@@ -121,7 +119,7 @@ Finally, navigate to https://podinfo.ocm.dev which now displays the OCM logo in 
 
 By leveraging the capabilities of Gitea, Tekton, Flux, and the OCM controller, this demo showcases the seamless deployment of components and dependencies in a secure manner. The use of secure OCI registries and automated release pipelines ensures the integrity and reliability of the deployment process.
 
-Users can easily set up the demo environment, cut releases, monitor release automation, view the Weave GitOps dashboard and observe the deployment and update of applications. We have presented a practical illustration of how OCM and Flux can be employed to facilitate the deployment and management of applications in air-gapped environments, offering a robust and efficient solution for secure software delivery.
+Users can easily set up the demo environment, cut releases, monitor release automation, view the Capacitor GitOps dashboard and observe the deployment and update of applications. We have presented a practical illustration of how OCM and Flux can be employed to facilitate the deployment and management of applications in air-gapped environments, offering a robust and efficient solution for secure software delivery.
 
 ## Contributing
 

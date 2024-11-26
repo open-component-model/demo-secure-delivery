@@ -2,7 +2,7 @@
 
 # libary functions
 # Version: v1.0.0
-# Author: Piaras Hoban <piaras@weave.works>
+# Author: Piaras Hoban <piaras@weave.works>, Gergely Brautigam <gergely@kubermatic.com>
 
 source ./lib_vars.sh
 
@@ -20,7 +20,7 @@ function create-cluster {
 }
 
 function add-hosts {
-    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev weave-gitops.ocm.dev ci.ocm.dev events.ci.ocm.dev)
+    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev capacitor.ocm.dev ci.ocm.dev events.ci.ocm.dev)
     for host in "${hosts[@]}"; do
         if ! grep -qF $host /etc/hosts; then
           echo "127.0.0.1        $host" | sudo tee -a /etc/hosts >/dev/null
@@ -85,6 +85,8 @@ function create-capacitor-component {
     make build
     make sign
     make push
+    # apply ingress for capacitor
+    kubectl apply -f ./ingress.yaml
     cd ../
 }
 

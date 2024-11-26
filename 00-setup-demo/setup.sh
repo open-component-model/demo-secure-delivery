@@ -2,7 +2,7 @@
 
 # demo environment setup
 # Version: v1.0.0
-# Author: Piaras Hoban <piaras@weave.works>
+# Author: Piaras Hoban <piaras@weave.works>, Gergely Brautigam <gergely@kubermatic.com>
 
 set -o errexit
 
