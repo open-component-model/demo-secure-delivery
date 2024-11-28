@@ -2,7 +2,7 @@
 
 # libary functions
 # Version: v1.0.0
-# Author: Piaras Hoban <piaras@weave.works>
+# Author: Piaras Hoban <piaras@weave.works>, Gergely Brautigam <gergely@kubermatic.com>
 
 source ./lib_vars.sh
 
@@ -20,7 +20,7 @@ function create-cluster {
 }
 
 function add-hosts {
-    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev weave-gitops.ocm.dev ci.ocm.dev events.ci.ocm.dev)
+    hosts=(gitea.ocm.dev gitea-ssh.gitea podinfo.ocm.dev capacitor.ocm.dev ci.ocm.dev events.ci.ocm.dev)
     for host in "${hosts[@]}"; do
         if ! grep -qF $host /etc/hosts; then
           echo "127.0.0.1        $host" | sudo tee -a /etc/hosts >/dev/null
@@ -80,12 +80,9 @@ function deploy-gitea {
     kubectl create secret -n gitea tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
 }
 
-function create-weave-gitops-component {
-    cd weave-gitops/
-    make build
-    make sign
-    make push
-    cd ../
+function create-capacitor-component {
+    # apply ingress for capacitor
+    kubectl apply -f ./manifests/capacitor.yaml
 }
 
 function deploy-ocm-controller {
@@ -96,11 +93,6 @@ function deploy-ocm-controller {
     kubectl create secret -n ocm-system generic ocm-signing --from-file=$SIGNING_KEY_NAME=./signing-keys/$SIGNING_KEY_NAME.rsa.pub
     kubectl create secret -n ocm-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
     kubectl create secret -n default tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
-
-    # # use ocm controller install
-    # docker run --network host -v $HOME/.kube:/home/ocmUser/.kube \
-    #     -e KUBECONFIG=/home/ocmUser/.kube/config \
-    #     ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest controller install
 
     kubectl apply -f ./manifests/ocm.yaml
     # kubectl apply -f ./manifests/replication.yaml

@@ -2,7 +2,7 @@
 
 # demo environment setup
 # Version: v1.0.0
-# Author: Piaras Hoban <piaras@weave.works>
+# Author: Piaras Hoban <piaras@weave.works>, Gergely Brautigam <gergely@kubermatic.com>
 
 set -o errexit
 
@@ -76,9 +76,6 @@ configure-ssh
 p "deploy tekton"
 deploy-tekton
 
-p "create weave gitops component"
-create-weave-gitops-component
-
 p "initialise repository"
 init-repository
 
@@ -87,6 +84,9 @@ init-component-repository
 
 p "bootstrapping flux"
 bootstrap-flux
+
+p "create capacitor component"
+create-capacitor-component
 
 p "create webhook & receiver"
 create-webhook

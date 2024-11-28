@@ -9,11 +9,11 @@ resources:
     type: ociArtifact
     imageReference: gitea.ocm.dev/software-provider/podinfo:6.3.6-static
 - name: chart
-  type: ociImage
-  input:
-    type: helm
-    version: 6.3.6
-    path: src/charts/podinfo-6.3.6.tgz
+  type: helmChart
+  version: 6.3.6
+  access:
+    imageReference: ghcr.io/stefanprodan/charts/podinfo:6.3.6
+    type: ociArtifact
 - name: manifests
   type: dir
   input:
@@ -26,7 +26,3 @@ resources:
     type: file
     path: src/ocm-ctrl/config.yaml
     compress: true
-componentReferences:
-- name: weave-gitops
-  componentName: ocm.software/demos/weave-gitops
-  version: v1.0.0

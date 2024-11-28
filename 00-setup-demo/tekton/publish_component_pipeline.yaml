@@ -88,7 +88,7 @@ spec:
         path: ocm-config.yaml
   steps:
   - name: build
-    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
+    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
     workingDir: "$(workspaces.source.path)"
     args:
       - add
@@ -103,7 +103,7 @@ spec:
     - name: certs
       mountPath: /etc/ssl/certs
   - name: sign
-    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
+    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
     workingDir: "$(workspaces.source.path)"
     args:
       - sign
@@ -121,7 +121,7 @@ spec:
     - name: certs
       mountPath: /etc/ssl/certs
   - name: transfer
-    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
+    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
     workingDir: "$(workspaces.source.path)"
     args:
       - --config
@@ -137,7 +137,7 @@ spec:
     - name: ocm-config
       mountPath: /var/ocm
   - name: verify
-    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
+    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
     workingDir: "$(workspaces.source.path)"
     args:
       - --config
@@ -159,7 +159,7 @@ spec:
     - name: ocm-config
       mountPath: /var/ocm
   - name: view
-    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:latest
+    image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
     workingDir: "$(workspaces.source.path)"
     args:
       - --config

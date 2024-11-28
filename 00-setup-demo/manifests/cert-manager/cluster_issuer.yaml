@@ -20,7 +20,7 @@ spec:
       - ocm.software
   dnsNames:
     - gitea.ocm.dev
-    - weave-gitops.ocm.dev
+    - capacitor.ocm.dev
     - podinfo.ocm.dev
     - ci.ocm.dev
     - events.ci.ocm.dev

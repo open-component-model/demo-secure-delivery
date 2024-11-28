@@ -1,6 +1,6 @@
 # Applications
 
-### Weave Gitops Dashboard: [https://weave-gitops.ocm.dev](https://weave-gitops.ocm.dev/kustomization/details?clusterName=Default&name=podinfo-component&namespace=flux-system)
+### Capacitor Gitops Dashboard: [https://capacitor.ocm.dev](https://capacitor.ocm.dev/kustomization/details?clusterName=Default&name=podinfo-component&namespace=flux-system)
 
 ### Podinfo Homepage: [https://podinfo.ocm.dev](https://podinfo.ocm.dev)
 
