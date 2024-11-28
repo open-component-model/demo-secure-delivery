@@ -81,13 +81,8 @@ function deploy-gitea {
 }
 
 function create-capacitor-component {
-    cd capacitor/
-    make build
-    make sign
-    make push
     # apply ingress for capacitor
-    kubectl apply -f ./ingress.yaml
-    cd ../
+    kubectl apply -f ./manifests/capacitor.yaml
 }
 
 function deploy-ocm-controller {
