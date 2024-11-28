@@ -21,7 +21,7 @@ The software consumer organization models an air-gapped scenario where applicati
 
 The software consumer organization contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains the Kubernetes manifests required to deploy the component published by the software provider.
 
-Once this pull request is merged the Flux machinery will deploy the dependency `capacitor` and subsequently the `podinfo` component. The [capacitor](https://capacitor.ocm.dev) can be used to understand the state of the cluster.
+Once this pull request is merged the Flux machinery will deploy `podinfo` component. [Capacitor](https://capacitor.ocm.dev) can be used to understand the state of the cluster.
 
 ### Walkthrough
 
@@ -64,7 +64,7 @@ When the release pipeline has been completed we can install the component. Navig
 
 ![capacitor](./docs/images/capacitor.png)
 
-With a minute or so Flux will reconcile the Capacitor component and the dashboard will be accessible at https://capacitor.ocm.dev.
+After certificates are created the Capacitor component and the dashboard will be accessible at https://capacitor.ocm.dev. Give it a minute to spin up...
 
 #### 5. View the application
 
