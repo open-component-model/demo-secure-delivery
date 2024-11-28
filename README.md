@@ -6,20 +6,23 @@
 
 ![workflow](./docs/images/diagram.png)
 
-This walkthrough deploys a full end-to-end pipeline demonstrating how OCM and Flux can be employed to deploy applications in air-gapped environments.
+This walkthrough deploys a full end-to-end scenario demonstrating how OCM and Flux can be employed to continuously deploy applications in air-gapped environments.
 
 The demo environment consists of Gitea, Tekton, Flux and the OCM controller.
-Two Gitea organizations are created:
+
+To be able to show that provider and consumer are really disconnected, two distinct Gitea organizations are created:
 - [software-provider](https://gitea.ocm.dev/software-provider)
 - [software-consumer](https://gitea.ocm.dev/software-consumer)
 
-The provider organization contains a repository which models the `podinfo` application. When a new release is created a Tekton pipeline will be triggered that builds the component and pushes it to the [software provider's OCI registry](https://gitea.ocm.dev/software-provider/-/packages).
+## Software Provider
+
+The provider organization contains a repository which models the `podinfo` application. When a new release is created a Tekton pipeline will be triggered that builds the OCM component and pushes it to the [software provider's OCI registry](https://gitea.ocm.dev/software-provider/-/packages).
 
 ## Software Consumer
 
-The software consumer organization models an air-gapped scenario where applications are deployed from a secure OCI registry rather than directly from an arbitrary upstream source.
+The software consumer organization models an air-gapped scenario where applications are deployed from a secure OCI registry rather than directly from an arbitrary public upstream source.
 
-The software consumer organization contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains the Kubernetes manifests required to deploy the component published by the software provider.
+The software consumer organization contains a repository named [ocm-applications](https://gitea.ocm.dev/software-consumer/ocm-applications). During the setup of the demo a PR is created which contains a set of Kubernetes manifests required to deploy the OCM component published by the software provider.
 
 Once this pull request is merged the Flux machinery will deploy `podinfo` component. [Capacitor](https://capacitor.ocm.dev) can be used to understand the state of the cluster.
 
@@ -42,44 +45,45 @@ password: password
 
 #### 2. Cut a release for `podinfo`
 
-![release](./docs/images/publish.png)
-
 Next navigate to: https://gitea.ocm.dev/software-provider/podinfo-component/releases and click "New Release".
 
 Enter "v1.0.0" for both the tag name and release name, and then click "Publish Release".
 
-#### 3. Verify the release
+![release](./docs/images/publish.png)
 
-![ci](./docs/images/release_automation.png)
+#### 3. Verify the release
 
 Once the release is published, navigate to https://ci.ocm.dev/#/namespaces/tekton-pipelines/pipelineruns and follow the progress of the release automation.
 
-#### 4. Install the Component
+![ci](./docs/images/release_automation.png)
 
-![install](./docs/images/install.png)
+#### 4. Install the Component
 
 When the release pipeline has been completed we can install the component. Navigate to https://gitea.ocm.dev/software-consumer/ocm-applications/pulls/1 and merge the pull request.
 
-#### 5. View the Capacitor Dashboard
+![install](./docs/images/install.png)
 
-![capacitor](./docs/images/capacitor.png)
+#### 5. View the Capacitor Dashboard
 
 After certificates are created the Capacitor component and the dashboard will be accessible at https://capacitor.ocm.dev. Give it a minute to spin up...
 
-#### 5. View the application
+![capacitor](./docs/images/capacitor.png)
 
-![podinfo](./docs/images/application.png)
+#### 5. View the application
 
 We can view the `podinfo` Helm release that's been deployed in the default namespace: https://capacitor.ocm.dev/
 
 We can also view the running application at https://podinfo.ocm.dev
 
+![podinfo](./docs/images/application.png)
+
 #### 6. Apply configuration
+
+The application can be configured using the parameters exposed in `values.yaml`. Now that podinfo is deployed we can tweak a few parameters.
+Navigate to https://gitea.ocm.dev/software-consumer/ocm-applications/_edit/main/values.yaml
 
 ![configure](./docs/images/configure.png)
 
-The application can be configured using the parameters exposed in `values.yaml`. Now that podinfo is deployed we can tweak a few parameters, navigate to
-https://gitea.ocm.dev/software-consumer/ocm-applications/_edit/main/values.yaml
 and add the following:
 
 ```yaml
@@ -91,9 +95,9 @@ podinfo:
 
 #### 7. View the configured application
 
-![update](./docs/images/update.png)
-
 The changes will soon be reconciled by Flux and visible at https://podinfo.ocm.dev. Note how the pod id changes now that we have 2 replicas of our application running.
+
+![update](./docs/images/update.png)
 
 #### 8. Cut a new release
 
@@ -105,15 +109,15 @@ Once the release is published, navigate to https://ci.ocm.dev/#/namespaces/tekto
 
 #### 10. Monitor the application update
 
-![update-wego](./docs/images/update-wego.png)
-
 Jump back to https://capacitor.ocm.dev to view the rollout of the new release.
+
+![update-wego](./docs/images/update-wego.png)
 
 #### 11. View the updated application
 
-![update-ocm](./docs/images/update-ocm.png)
-
 Finally, navigate to https://podinfo.ocm.dev which now displays the OCM logo in place of the cuttlefish and the updated application version of 6.3.6
+
+![update-ocm](./docs/images/update-ocm.png)
 
 ### Conclusion
 
