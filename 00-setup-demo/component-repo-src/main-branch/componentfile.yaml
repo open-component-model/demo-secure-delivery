@@ -9,11 +9,17 @@ resources:
     type: ociArtifact
     imageReference: gitea.ocm.dev/software-provider/podinfo:6.3.5-static
 - name: chart
-  type: ociImage
-  input:
-    type: helm
-    version: 6.3.5
-    path: src/charts/podinfo-6.3.5.tgz
+  type: helmChart
+  version: 6.3.5
+  access:
+    imageReference: ghcr.io/stefanprodan/charts/podinfo:6.3.5
+    type: ociArtifact
+# - name: chart
+#   type: ociImage
+#   input:
+#     type: helm
+#     version: 6.3.5
+#     path: src/charts/podinfo-6.3.5.tgz
 - name: manifests
   type: dir
   input:
