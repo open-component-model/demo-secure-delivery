@@ -3,6 +3,9 @@
 # see: https://github.com/open-component-model/.github/blob/main/.github/settings.yml
 _extends: .github
 
+repository:
+  topics: ocm, open-component-model, demo
+
 labels:
 - name: repo/demo-secure-delivery
   color: bfd4f2
