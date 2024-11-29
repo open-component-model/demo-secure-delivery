@@ -328,6 +328,7 @@ function bootstrap-flux {
     cat ./ca-certs/alpine-ca.crt "$MKCERT_CA" > $TMPFILE
     kubectl create ns flux-system
     kubectl create secret -n flux-system generic ocm-dev-ca --from-file=ca-certificates.crt=$TMPFILE
+    kubectl create secret -n flux-system tls mkcert-tls --cert=./certs/cert.pem --key=./certs/key.pem
     flux create secret git -n flux-system flux-system \
         --url ssh://git@gitea-ssh.gitea:2222/software-consumer/$PRIVATE_REPO_NAME.git \
         --private-key-file=$SSH_KEY_PATH
