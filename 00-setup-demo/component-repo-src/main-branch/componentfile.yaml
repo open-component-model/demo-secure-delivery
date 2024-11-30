@@ -2,24 +2,28 @@ name: ocm.software/demos/podinfo
 provider:
   name: ocm.software
 resources:
+# Podinfo Docker image
 - name: image
   type: ociImage
   version: 6.3.5-static
   access:
     type: ociArtifact
     imageReference: gitea.ocm.dev/software-provider/podinfo:6.3.5-static
+# Podinfo Helm chart
 - name: chart
   type: helmChart
   version: 6.3.5
   access:
     imageReference: ghcr.io/stefanprodan/charts/podinfo:6.3.5
     type: ociArtifact
+# Manifests for Flux (Helm repo and Helm release)
 - name: manifests
   type: dir
   input:
     type: dir
     path: src/flux
     compress: true
+#  Config templates for the OCM controllers (used for Localization and Configuration)
 - name: config
   type: file
   input:
