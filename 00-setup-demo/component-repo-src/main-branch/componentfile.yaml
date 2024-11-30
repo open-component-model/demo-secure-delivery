@@ -30,3 +30,13 @@ resources:
     type: file
     path: src/ocm-ctrl/config.yaml
     compress: true
+#
+# For aggregated components you would add references here:
+#
+# componentReferences
+# - name: component-reference-1
+#   componentName: ocm.software/demos/demo-component-1
+#   version: 1.0.0
+# - name: component-reference-2
+#   componentName: ocm.software/demos/demo-component-2
+#   version: 1.0.0
