@@ -4,13 +4,14 @@
 
 ## Fully guided walkthrough
 
-![workflow](./docs/images/diagram.png)
+![workflow](./docs/images/new_diagram.png)
 
 This walkthrough deploys a full end-to-end scenario demonstrating how OCM and Flux can be employed to continuously deploy applications in air-gapped environments.
 
 The demo environment consists of Gitea, Tekton, Flux and the OCM controller.
 
 To be able to show that provider and consumer are really disconnected, two distinct Gitea organizations are created:
+
 - [software-provider](https://gitea.ocm.dev/software-provider)
 - [software-consumer](https://gitea.ocm.dev/software-consumer)
 
