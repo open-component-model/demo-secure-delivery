@@ -39,16 +39,16 @@ docker.io/kindest/local-path-provisioner:v20230511-dc714da8
 registry:2
 cgr.dev/chainguard/busybox
 docker.io/library/alpine:latest
-gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.55.0
-gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.75.0
-gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.75.0
-gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/events:v0.75.0
-gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.75.0
-gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.75.0
-gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.31.0
-gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.31.0
-gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.31.0
-gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.31.0
+ghcr.io/tektoncd/github.com/tektoncd/dashboard/cmd/dashboard:v0.47.0
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.48.0
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.48.0
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/events:v0.48.0
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.40.2
+gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/webhook:v0.48.0
+gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.24.0
+gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.24.0
+gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.24.0
+gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.24.0
 )
 
 preloadimages=(
@@ -68,7 +68,7 @@ ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
 registry:2
 cgr.dev/chainguard/busybox
 docker.io/library/alpine:latest
-gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.36.0
+ghcr.io/tektoncd/github.com/tektoncd/dashboard/cmd/dashboard:v0.47.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.48.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.48.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/events:v0.48.0
