@@ -19,7 +19,7 @@ images=(
 ghcr.io/open-component-model/podinfo:6.3.5-static
 ghcr.io/open-component-model/podinfo:6.3.6-static
 ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
-ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
+ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
 ghcr.io/gimlet-io/capacitor:v0.4.8
 ghcr.io/fluxcd/helm-controller:v1.0.1
 ghcr.io/fluxcd/kustomize-controller:v1.3.0
@@ -78,7 +78,7 @@ gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/controller:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/eventlistenersink:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/interceptors:v0.24.0
 gcr.io/tekton-releases/github.com/tektoncd/triggers/cmd/webhook:v0.24.0
-ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.11.0
+ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
 )
 
 helm_mac_instructions="brew install helm"
