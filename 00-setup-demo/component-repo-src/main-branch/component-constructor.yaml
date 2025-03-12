@@ -1,0 +1,22 @@
+name: ocm.software/demos/podinfo
+provider:
+  name: ocm.software
+resources:
+  # Podinfo Docker image
+  - name: image
+    type: ociImage
+    version: 6.8.0
+    access:
+      type: ociArtifact
+      imageReference: ghcr.io/stefanprodan/podinfo:6.8.0
+  # Podinfo Helm chart
+  - name: chart
+    type: helmChart
+    version: 6.3.5
+    access:
+      imageReference: ghcr.io/stefanprodan/charts/podinfo:6.8.0
+      type: ociArtifact
+componentReferences:
+  - name: component-reference-1
+    componentName: ocm.software/demos/demo-component-1
+    version: 1.0.0

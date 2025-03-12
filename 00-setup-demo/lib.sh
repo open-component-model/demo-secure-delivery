@@ -208,7 +208,7 @@ function init-component-repository {
     git -C ./component-repo remote add origin ssh://git@gitea-ssh.gitea:2222/software-provider/podinfo-component.git
     GIT_SSH_COMMAND="ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no" git -C ./component-repo push origin --all
     git -C ./component-repo checkout -b new-release
-    rm -rf ./component-repo/src ./component-repo/componentfile.yaml
+    rm -rf ./component-repo/src ./component-repo/component-constructor.yaml
     cp -R ./component-repo-src/new-release-branch/. ./component-repo
     git -C ./component-repo add .
     git -C ./component-repo commit -m "release podinfo version 6.3.6"

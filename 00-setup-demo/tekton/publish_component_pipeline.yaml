@@ -98,7 +98,7 @@ spec:
       - $(params.version)
       - --scheme
       - v3alpha1
-      - componentfile.yaml
+      - component-constructor.yaml
     volumeMounts:
     - name: certs
       mountPath: /etc/ssl/certs
