@@ -68,7 +68,7 @@ ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
 registry:2
 cgr.dev/chainguard/busybox
 docker.io/library/alpine:latest
-ghcr.io/tektoncd/github.com/tektoncd/dashboard/cmd/dashboard:v0.47.0
+gcr.io/tekton-releases/github.com/tektoncd/dashboard/cmd/dashboard:v0.36.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/controller:v0.48.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/entrypoint:v0.48.0
 gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/events:v0.48.0
