@@ -19,7 +19,7 @@ spec:
       This workspace contains the cloned repo files, so they can be read by the
       next task.
   tasks:
-  - name: checkout
+  - name: checkout-component
     taskRef:
       name: git-clone
     workspaces:
@@ -30,9 +30,9 @@ spec:
       value: $(params.repo-url)
     - name: revision
       value: $(params.ref)
-  - name: publish
+  - name: publish-component
     runAfter:
-    - checkout
+    - checkout-component
     taskRef:
       name: publish-component
     params:
@@ -87,7 +87,7 @@ spec:
       - key: ocm-config.yaml
         path: ocm-config.yaml
   steps:
-  - name: build
+  - name: build-component
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
     workingDir: "$(workspaces.source.path)"
     args:
@@ -100,7 +100,7 @@ spec:
     volumeMounts:
     - name: certs
       mountPath: /etc/ssl/certs
-  - name: sign
+  - name: sign-component
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
     workingDir: "$(workspaces.source.path)"
     args:
@@ -118,7 +118,7 @@ spec:
       mountPath: /var/signing
     - name: certs
       mountPath: /etc/ssl/certs
-  - name: transfer
+  - name: transfer-to-oci-registry
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
     workingDir: "$(workspaces.source.path)"
     args:
@@ -134,7 +134,7 @@ spec:
       mountPath: /etc/ssl/certs
     - name: ocm-config
       mountPath: /var/ocm
-  - name: verify
+  - name: verify-signature
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
     workingDir: "$(workspaces.source.path)"
     args:
@@ -156,7 +156,7 @@ spec:
       mountPath: /etc/ssl/certs
     - name: ocm-config
       mountPath: /var/ocm
-  - name: view
+  - name: view-component-descriptor
     image: ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
     workingDir: "$(workspaces.source.path)"
     args:

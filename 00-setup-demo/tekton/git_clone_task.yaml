@@ -117,7 +117,7 @@ spec:
     - name: committer-date
       description: The epoch timestamp of the commit that was fetched by this Task.
   steps:
-    - name: clone
+    - name: clone-repository
       image: "$(params.gitInitImage)"
       env:
       - name: HOME
