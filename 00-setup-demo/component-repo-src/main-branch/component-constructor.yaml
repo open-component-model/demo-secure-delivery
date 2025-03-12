@@ -1,6 +1,7 @@
 name: ocm.software/demos/podinfo
 provider:
   name: ocm.software
+  
 resources:
   # Podinfo Docker image
   - name: image
@@ -16,7 +17,9 @@ resources:
     access:
       imageReference: ghcr.io/stefanprodan/charts/podinfo:6.8.0
       type: ociArtifact
+
+# References to other OCM components
 componentReferences:
-  - name: component-reference-1
-    componentName: ocm.software/demos/demo-component-1
-    version: 1.0.0
+  - name: capacitor
+    componentName: ocm.software/demos/capacitor
+    version: 0.4.8

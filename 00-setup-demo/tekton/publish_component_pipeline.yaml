@@ -96,8 +96,6 @@ spec:
       - --create
       - --version
       - $(params.version)
-      - --scheme
-      - v3alpha1
       - component-constructor.yaml
     volumeMounts:
     - name: certs

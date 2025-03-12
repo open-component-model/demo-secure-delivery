@@ -12,7 +12,7 @@ clean:
 
 .PHONY: build
 build: clean
-	@ocm add componentversions --create --file ${OUTPUT_DIR} --version ${VERSION} --scheme v3alpha1 componentfile.yaml
+	@ocm add componentversions --create --file ${OUTPUT_DIR} --version ${VERSION} componentfile.yaml
 
 .PHONY: generate-keys
 generate-keys:

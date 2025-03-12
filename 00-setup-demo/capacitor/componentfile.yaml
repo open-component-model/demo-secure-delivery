@@ -7,21 +7,3 @@ resources:
   input:
     type: docker
     path: ghcr.io/gimlet-io/capacitor-manifests:v0.4.8
-- name: chart
-  type: ociImage
-  input:
-    type: helm
-    version: 4.0.22
-    path: capacitor-0.4.8.tgz
-- name: manifests
-  type: dir
-  input:
-    type: dir
-    path: src/flux
-    compress: true
-- name: config
-  type: file
-  input:
-    type: file
-    path: src/ocm-ctrl/config.yaml
-    compress: true
