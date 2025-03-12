@@ -3,7 +3,9 @@ provider:
   name: ocm.software
 resources:
 - name: image
+  version: 0.4.8
   type: ociImage
-  input:
-    type: docker
-    path: ghcr.io/gimlet-io/capacitor-manifests:v0.4.8
+  access:
+    type: ociArtifact
+    imageReference: ghcr.io/gimlet-io/capacitor:v0.4.8
+    

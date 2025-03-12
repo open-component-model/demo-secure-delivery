@@ -1,4 +1,4 @@
-VERSION=v1.0.0
+VERSION=v0.4.8
 COMPONENT_NAME=ocm.software/demos/capacitor:${VERSION}
 OUTPUT_DIR=.out
 KEYNAME=ocm-signing

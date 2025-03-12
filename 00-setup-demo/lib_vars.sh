@@ -16,8 +16,6 @@ os=$(uname -s)
 tools=(helm flux kind jq kubectl ocm mkcert tea git curl docker gzip)
 
 images=(
-ghcr.io/open-component-model/podinfo:6.3.5-static
-ghcr.io/open-component-model/podinfo:6.3.6-static
 ghcr.io/open-component-model/ocm-controller:v0.23.9-dev
 ghcr.io/open-component-model/ocm/ocm.software/ocmcli/ocmcli-image:0.21.0
 ghcr.io/gimlet-io/capacitor:v0.4.8
